@@ -22,13 +22,18 @@ title: Dmitry Kazakov
 email: dmitrii.kazakov@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Publications for my clients and readers on software engineering and social topics.
+  
+  https://www.youtube.com/channel/UCEjmNNX-Z6I2OypTm1PYopw
 baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 markdown: kramdown
 twitter_username: di_kazakov
 github_username:  Gelassen
 linkedin_username: dmkazakov
+
+youtube: demos
 youtube_channel: UCEjmNNX-Z6I2OypTm1PYopw
+youtube_channel_name: Dmitriy Kazakov
 
 # Build settings
 theme: minima
