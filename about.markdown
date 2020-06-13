@@ -21,8 +21,8 @@ permalink: /about/
     <p>Native Android development and others software solutions. My major specialization is native Android development, but now I am open for new opportunities and follow market demands. My freelance status allows me be flexible with rates aligned to the value I deliver, that's why it is possible to pick up new skills on the way.</p> 
 
     <p>Business analysis</p>
-    <p>Before coderbunker I don't have experience of running the company and don't have credibility to give any recommendations in this field. However engineers build and fix complex systems which give them problem solving skills. It is transferable expertise which can be applied to others domains, e.g.  https://www.linkedin.com/hp/update/6269857024838860800
+    <p>Before coderbunker I don't have experience of running the company and don't have credibility to give any recommendations in this field. However engineers build and fix complex systems which give them problem solving skills. It is transferable expertise which can be applied to others domains, e.g.  https://www.linkedin.com/hp/update/6269857024838860800 </p>
 
-    <a href="https://www.linkedin.com/in/dmkazakov/">For more infromation please check my LinkedIn profile</a></p>
+    <a href="https://www.linkedin.com/in/dmkazakov/">For more infromation please check my LinkedIn profile</a>
 
 </div>
