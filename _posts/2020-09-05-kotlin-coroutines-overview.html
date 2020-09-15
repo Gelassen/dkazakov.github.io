@@ -21,7 +21,6 @@ modified_time: '2020-09-05'
 
             <h3 style="text-align: left;">Where it cames from</h3>
 
-            <br /><br />
             Originally appeared in 1960x in COBOL&Simula. Threads were introduced a bit later and market preferred them. 
             They have been using quite a long time until one its issue become more and more disturbing. <br /><br />
 
@@ -42,18 +41,18 @@ modified_time: '2020-09-05'
             
             Coroutines were introduced as a solution for that. It allows you to do block of code in parallel, it is lightweight and allows you write async and non async code in the same style. <br /><br />
 
-            <br /><br />
-
             <h3 style="text-align: left;">How does it work</h3>
 
-            Kotlin extends a signature of a method by passing Continuation function as a parameter and adding 'suspend' modifier to the method. <br /><br />
+            Kotlin extends a signature of a method by passing Continuation function as a parameter and adding 'suspend' modifier to the method. 
+            <br /><br />
             
-            <code>
+            <pre>
+
                 inline fun <T> Continuation(
                     context: CoroutineContext,
                     crossinline resumeWith: (Result<T>) -> Unit
                 ): Continuation<T>
-            </code>
+            </pre>
             <a link="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-continuation.html">'Continuation' in official documentation</a>
 
             Continuation function wraps call on next suspend function. The call of this continuation object is optional and might be not called at all. <br /><br />
@@ -64,20 +63,19 @@ modified_time: '2020-09-05'
 
             <a link="https://image.slidesharecdn.com/2017geekout-introductiontokotlincoroutines-170609161713/95/introduction-to-kotlin-coroutines-18-638.jpg?cb=1502800140">Kotlin code transformed into state machine.</a> <br /><br />
 
-            <br /><br />
-
             <h3 style="text-align: left;">How does it integrate existing codebase</h3>
 
             It does over integration library and extension <code>await()</code>. await() transforms Future (e.g. Call<T> from retrofit) to state machine 
             exploting Future callbacks <br /><br />
             
-            suspendCoroutine() is that what stops a method and wraps block of executing code <br />
+            suspendCoroutine() is that what stops a method and wraps block of executing code <br /> <br />
 
-            <code>
+            <pre>
+
                 suspend inline fun <T> suspendCoroutine(
                     crossinline block: (Continuation<T>) -> Unit
                 ): T
-            </code>
+            </pre>
 
             <a link="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/suspend-coroutine.html">suspendCoroutine() in the official documentation</a> <br /><br />
 
@@ -90,9 +88,12 @@ modified_time: '2020-09-05'
 
             <h3 style="text-align: left;">Worth to note</h3>
 
-            Access&manipulation on shared resource can be done new and reinvented kotlin mechanisms: thread confinement, mutex and actors
+            Access&manipulation on shared resource can be done new and reinvented kotlin mechanisms: thread confinement, mutex and actors 
+            
+            <br /> <br />
 
-            <code>
+            <pre>
+
                 val counterContext = newSingleThreadContext("CounterContext")
                 var counter = 0
 
@@ -105,15 +106,18 @@ modified_time: '2020-09-05'
                     }
                     println("Counter = $counter")
                 }
-            </code>
+            </pre>
 
             <a link="https://kotlinlang.org/docs/reference/coroutines/shared-mutable-state-and-concurrency.html#thread-confinement-fine-grained">More informatiion in official docs</a>
 
             Do not run function without access to the scope. If you need to launch a coroutine that keeps running after your function returns, 
             then make your function an extension of CoroutineScope or pass scope: CoroutineScope as parameter to make your intent clear in 
-            your function signature. Do not make these functions suspending: [3]
+            your function signature. Do not make these functions suspending: [3] 
 
-            <code>
+            <br /> <br />
+
+            <pre>   
+
                 fun CoroutineScope.doThis() {
                     launch { println("I'm fine") }
                 }
@@ -121,16 +125,16 @@ modified_time: '2020-09-05'
                 fun doThatIn(scope: CoroutineScope) {
                     scope.launch { println("I'm fine, too") }
                 }
-            </code>
+            </pre>
+        </div> 
 
-
-        </div>
+        <br /><br />
 
         <div>
-            Materials used: 
-            [1] (Link to Roman Elizarov video)
-            [2] <a link="https://www.cs.tufts.edu/~nr/cs257/archive/roberto-ierusalimschy/revisiting-coroutines.pdf">Origins of coroutines</a>
-            [3] <a link="https://medium.com/@elizarov/coroutine-context-and-scope-c8b255d59055">Proper use of coroutine scope</a>
+            Materials used: <br/>
+            [1] <a link="https://www.youtube.com/watch?v=3xalVUY69Ok">Roman Elizarov's intro into coroutines</a> <br />
+            [2] <a link="https://www.cs.tufts.edu/~nr/cs257/archive/roberto-ierusalimschy/revisiting-coroutines.pdf">Origins of coroutines</a> <br />
+            [3] <a link="https://medium.com/@elizarov/coroutine-context-and-scope-c8b255d59055">Proper use of coroutine scope</a> <br />
         </div>
     </body>
 </html>
