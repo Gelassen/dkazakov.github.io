@@ -1,0 +1,57 @@
+---
+layout: post
+title: 'VPN protocols'
+date: '2020-09-20'
+author: Gelassen
+tags: 
+modified_time: '2020-09-20'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    
+    <body>
+        <div class="header" style="text-align: left;">
+        </div>
+        <div>
+            Passed week I look through VPN specs, IEEE docs and implementations with intent to get better understanding it work and implement one. 
+
+            Here is a summary of my research to put down outcome of it. 
+
+            <br/><br/>
+
+            In the nutshell VPNs wraps original packet in the new one. Origin packet is encrypted and becomes not avaiable for access when it comes through global network. 
+            External packet provides source and destinations IPs for navigation and additional data that varies among protocols.  
+
+            <br/><br/>
+
+            The most popular protocols are SSTP, PPTP, L2TP/IPsec, IKEv2. 
+
+            <br/><br/>
+
+            Another issue is a response on things like Great China Firewall and others attempts to control web traffic. 
+
+            <br/><br/>
+
+            When I was living and working in China I got interesting insights on its work. Most of this things I forget, but basically they enabled 
+            Deep Packet Inspection (DPI) and bring machine learning to evaluate traffic that fall into censorship rules. It constantly evolving that 
+            forces existing solutions to look for new ways to overcome new obstacles. 
+            
+            <br/><br/>
+
+            From GoHop VPN I learn it changes protocols and ports with traffic morphing to make traffic misfit patterns censorship algorithms looks for. 
+            There are many others ways to go through this which was interesting topic to explore and dificult project to work on without concrete 
+            aim and constraints besides just curiosity. 
+
+            <br/><br/>
+
+            Known instruments to monitor traffic is DPI and statistic analysis by external parameters of the packet or its payload. I need more time to understand 
+            how it works in details which is the key to find solution to escape it attention. Wright's approach to traffic shaping is the most referenced 
+            across works I read <a link="https://www.academia.edu/1938523/Traffic_morphing_An_efficient_defense_against_statistical_traffic_analysis">Wirght's morphing</a>,
+            but it needs more investigation across existing open source implementations (e.g. Shadowsocks or OpenVPN) 
+            
+            <br /><br />
+
+    </body>
+</html>
