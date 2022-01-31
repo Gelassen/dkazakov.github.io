@@ -1,0 +1,145 @@
+---
+layout: post
+title: 'ML. Housing price prediction'
+date: '2020-12-05'
+author: Gelassen
+tags: 
+modified_time: '2020-12-05'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    
+    <body>
+        <div class="header" style="text-align: left;">
+		</div>
+	
+
+        <div>
+			<h3>Summary</h3>
+			This paper describes my work on solution for house price prediction on Voronezh (Russia, ~1m population) market. The achieved result is unsatisfactory (~50% of right predictions).
+			Model accuracy is not good enough for launch it on the market. It should be possible to increase model accuracy via adding more features (house properties) 
+			and observations that requiers more rich dataset originally gathered via public boards. Also there is always space for creative search that gives good chances
+			to increase model quality. </br> </br>
+
+			The value of this paper in methodology and instruments applied to solve the task. They can be used to solve the task on others markets and can be transferred 
+			on others tasks and domains. </br> </br>
+			
+			Tech stack: jupiter notebook, pandas, sklearn, torch, numpy, searborn, octoparse 
+
+			<a link="https://github.com/Gelassen/machine-learning/tree/master/housing-price-prediction-model">Jupiter notebook with code</a>
+
+			</br> </br>
+		 
+			<h3>Discovery</h3>
+
+			Initially the similar problem was solved on classic training Boston dataset that contains house pricing data for Boston real estate market from 1970th.
+			The achieved accuracy is ~75%. Learned techniques were applied to this problem.  </br> </br>
+			
+			In case of Boston dataset data was already gathered and pre-processed. In this case the first step is to gather data and clean it. 
+
+			</br> </br>	
+
+			<h4>Data gathering</h4>
+
+			In Voronezh there are several public boards with house prices. The one was used for this project to decrease amount of efforts on parsing multiple sources and 
+			what's more important filter from duplicates. Market research shows that it has products that allows you to write high level script to run crawlers to
+			parse and gather data. It was used to gather this dataset. Rate of errors (dirty data) brought me to idea to write own crawler and data transformer.  </br> </br>
+
+			Common rule is amount of samples (observations) is 10x more than amount of features.
+		
+			</br> </br> 
+
+			<h4>Data cleaning</h4>
+
+			After transforming json to csv file the final dataset has missed field and not correct data entries. I have to go through loop traverse pandas cells and 
+			do cleaning operations based on nature of error. For NaN pandas provides built-in functions, for columns with high percent of missed data (>25%)
+			we should drop them or replace with some placeholder value, usually zero or mean(). </br> </br>
+
+			All non-numeric columns should be transformed to numeric form. Scikit-learn provides two options to do this: label and one-hot encoding. </br> </br>
+			
+			Before doing that my dataset requires to do language processing and extracting new features from existing fields. 
+		
+			</br> </br>
+			
+			<h4>Importance of features</h4>
+
+			Changes in some features impact outcome more than changes in others, often it is valuable to pick-up only subset of features with hightest impact on final result.
+			Seaborn lib allows to built and draw correlation matrix, yellowbrick feature correlation lib allows to draw more UX-firendly correlation plot of features. 
+			
+			</br> </br>
+
+			Generally it is suggested to drop out mutually correlated features - change in one leads to change in another, - as it often negatively affect 
+			prediction capacity, but I have personal positive experience for some cases. 
+		
+			</br> </br>
+
+			<h4>Data normalization</h4>
+
+			Many of ML techniques, including linear regression that is used in this model, requires normally distributed data. We can draw graphic for each column 
+			to check it's normal distribution and pick up appropriate features. We also can take logarithm from some others column to transform it to normally 
+			distributed dataset. As we look for dependency between input and output of our model applying operations like this should be appropriate.
+			
+			</br> </br>
+
+			<h4>Standartization and scalling</h4>
+
+			It is used to align all features to the same scale. Scikit-learn has variety of scallers which do this differently with respect to outliers and others factors. 
+
+			</br> </br>
+			
+			<h4>Building the model</h4>
+
+			For problems such image recognition it is common to add a layer per pattern this layer should recognize. In the example of car recognition
+			first layer recognize wheels, next one silhouette of the car, the last layers others parts. </br> </br>
+			
+			Amount of nodes in layer should be at least equal to amount of features. For regression problems final layer's ouput should be one node. </br> </br>   
+
+			Common practice is to start from one layer and minmum amount of nodes and add more complexity by demand. Except cases
+			when experience suggest sub-optimal architecture to start with. </br> </br>
+
+			<h4>Activation functions</h4>
+
+			Activation function allows signal to pass on another layer. The purpose of the activation function is to introduce non-linearity into the output of a neuron.
+			It makes modern ML key stone back-propagation is possible. </br> </br>
+
+			The power of activation functions (from less to more efficient): logistic -> tanh -> ReLU -> leaky ReLU -> ELU -> SELU </br> </br>
+
+			Each of them is works the best with each type of tasks: </br> </br>
+
+			- Regression: 1. Doesn't require 2. To bound [-1:1] -> tanh or [0:1] -> log</br>  
+			- Regression with positive output: softplus </br> 
+			- Classification: 1. Binary classification -> sigmoid 2. Multiclass classification -> softmax
+
+			</br> </br>	
+
+			Weight initialization: </br> </br>
+
+			- ReLU or Leaky ReLU: <a href="https://stats.stackexchange.com/questions/319323/whats-the-difference-between-variance-scaling-initializer-and-xavier-initialize/319849#319849">He init</a></br>
+			- SeLU or ELU:  LeCun init </br>
+			- Softmax, logistic or tanh: Glorot init </br> </br>
+
+			One of the interesting aspects is Dropout layer that allows to turn off on step some subset of nodes. <a href="https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html">
+			This has proven to be an effective technique for regularization and preventing the co-adaptation of neurons as described in the paper</a> </br> </br>
+
+			The graphic based on loss history (learning curve) gives feedback on optimizer and hyper parameters you chosed and some ideas how to shift them 
+
+			</br> </br>
+
+			<h4>Optimizers and hyperparameters</h4>
+
+			There are many of them. <a href="https://paper-attachments.dropbox.com/s_39292DB9CE2A9400103E176C2ABC438C6A626910E9DBB0D6FBE28EE673C7492C_1565307886324_optimization_algorithms.gif">This</a> 
+			should help to choose right one and <a href="https://docs.python.org/3/library/itertools.html#itertools.product">itertools.product</a> 
+			should help with running different variety of models to pick up best hyperparameters 
+
+			</br> </br>
+
+			For key aspect of ML check <a link="https://gelassen.github.io/blog/2020/10/23/getting-skills-in-ml.html">this link.</a>
+
+			</br> </br>	
+
+        </div>
+
+    </body>
+</html>

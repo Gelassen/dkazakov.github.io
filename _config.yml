@@ -1,0 +1,73 @@
+title: Dmitry Kazakov
+author:
+  name: Dmitry Kazakov
+  email: dmitrii.kazakov@gmail.com
+description: > # this means to ignore newlines until "show_excerpts:"
+  Publications for my clients and readers on software engineering and social topics. https://www.youtube.com/channel/UCEjmNNX-Z6I2OypTm1PYopw/videos
+
+show_excerpts: false # set to true to show excerpts on the homepage
+
+# baseurl: "/blog"
+
+github_username:  Gelassen
+linkedin_username: dmkazakov
+
+paginate: 7
+# paginate_path: "posts/page:num/"
+
+# markdown: kramdown
+
+# Minima date format
+# refer to https://shopify.github.io/liquid/filters/date/ if you want to customize this
+minima:
+  date_format: "%b %-d, %Y"
+
+  # generate social links in footer
+  social_links:
+    github:  Gelassen
+    linkedin: dmkazakov
+    youtube: channel/UCEjmNNX-Z6I2OypTm1PYopw/videos
+    # youtube_channel: UCEjmNNX-Z6I2OypTm1PYopw
+    # youtube_channel_name: Demos
+    github_username:  Gelassen
+    linkedin_username: dmkazakov
+    # devto: jekyll
+    # dribbble: jekyll
+    # facebook: jekyll
+    # flickr:   jekyll
+    # instagram: jekyll
+    # pinterest: jekyll
+    # youtube: jekyll
+    # youtube_channel: UC8CXR0-3I70i1tfPg1PAE1g
+    # youtube_channel_name: CloudCannon
+    # telegram: jekyll
+    # googleplus: +jekyll
+    # microdotblog: jekyll
+    # keybase: jekyll
+
+    # Mastodon instances
+    # mastodon:
+    # - username: jekyll
+    #   instance: example.com
+    # - username: jekyll2
+    #   instance: example.com
+
+    # GitLab instances
+    # gitlab:
+    # - username: jekyll
+    #   instance: example.com
+    # - username: jekyll2
+    #   instance: example.com
+
+# If you want to link only specific pages in your header, uncomment
+# this and add the path to the pages in order as they should show up
+#header_pages:
+# - about.md
+
+# Build settings
+theme: minima
+
+plugins:
+ - jekyll-feed
+ - jekyll-seo-tag
+ - jekyll-paginate
