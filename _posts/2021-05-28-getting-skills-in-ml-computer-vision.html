@@ -1,0 +1,80 @@
+---
+layout: post
+title: 'Getting skills in ML Computer Vision'
+date: '2021-05-28'
+author: Gelassen
+tags: 
+modified_time: '2021-05-28'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    
+    <body>
+        <div class="header" style="text-align: left;">
+        </div>
+
+        Template matching. We get the image template of the origin object we are going to search and looking for
+        a match between template and image we scan pixel by pixel. (stop metrics: least square method, cross correlation) 
+
+        <br></br>
+
+        Evolutionary step: search for the borders/edges, formalised task - rapid change of surface normal, rapid change of depth,
+        color, illumination of the surface. In math it would be extremum of the function, derivative, gradient. (metrics of comparisation:
+        chamber distance, hausdorff distance)  
+        
+        <br></br>
+
+        Applying Gabor's filters: extracting low and high frequences. 
+
+        <br></br>
+
+        Pyramids of images. 
+
+        <br></br>
+
+        How to include in search affine transformations or presence of alien objects? The solution is a search of special points and 
+        template matching by this points. 
+
+        <br></br>
+
+        Harris detector for special points search. The core concept is to detect change of surface around edges. Also free 
+        coefficients are used, they are chosed by normal distribution: the closer to the edge the closer to the 1st quantile.   
+        
+        <br></br> 
+
+        From detector of the special points to the detector of the areas of the surface (IBR, MSER).  
+
+        <br></br>
+
+        Gathering local special points in the SIFT descriptors.  
+
+        <br></br>
+
+        SIFT in the nutshell uses set of images blurred by Gaussian filter. Special points (edges, borders) on the image are emphasized easier 
+        when details are removed or smoothed. The strength/degree of the blur is increasing from image to image (usually with degree 2 * coefficient of the blur). 
+        Images by itself are represented as the pyramid. Besides blurring images also should be scaled down sequently one by one.
+        Next step would be comparing images from the pyramid one by one (the difference of the 'gaussians') to extract special points. Finally 
+        we should get at least 2 images with the specail points which brings contrains on the size of the origin set of blurred and scaled images (minimum 5). 
+
+        <br></br>
+
+        By going through image we have to calculate points in windows with maximum value regarding its neighbors in the image the current level and 
+        two closest in the pyramid. We should filter special points by leaving only edges. It could be done by Haris corner detector.         
+
+        <br></br>
+
+        Further we have to calculate histogram of gradients and orientations. Histogram of directrions is split on bins and evaluate 
+        the dominate direction by summ of gradient values in each bin. 
+
+        <br></br>
+
+        Descriptor is built by 'gaussian' closest to the special point. In similar way we calculate gradients and orientations 
+        of the neighborhoods of the special point, also weight coefficients are used with aim to increase weights of the neighborhoods
+        closest to the special point and decrease weight of the neighborhoods that stay far from it. Also descriptor is normalised 
+        to the rotation and the illumination: the rotation angle of the special point is calculated from the rotation angle of the neighborhood 
+        and values are cut off by the threshold (~0.2)  
+
+    </body>
+</html>
