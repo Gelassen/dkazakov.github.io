@@ -1,0 +1,178 @@
+---
+layout: post
+title: 'Case study: flowers store chain growing revenue'
+date: '2022-02-19'
+author: Gelassen
+tags: 
+modified_time: '2022-02-19'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    
+    <body>
+        <div class="header" style="text-align: left;">
+        </div>
+
+        This week I had a talk with prospective client and make a proposal which should increase
+        her sales and new customers on ~25% based on data we had. Below is ideas and methodology of
+        the implementation.  
+
+
+        <h3 style="text-align: left;">The idea</h3> 
+
+        Based on my data (Russian market, 2019) the market of online purchases is quite big (~50% 
+        from all market) and <a href="https://avatars.mds.yandex.net/get-bunker/128809/c1ad7137a1e20f30d9e3d53cad958b242e320a98/orig">continues to grow</a>, 
+        ~30% of customers purchase goods over mobile devices and <a href="https://avatars.mds.yandex.net/get-bunker/128809/fbb6f8c9fb2d578052ed80a9ceb4a28a20f21145/orig">their market share continues to grow</a>. 
+        It becomes crucial to have digital sales channel both on desktop and mobile sides where 
+        customer can view goods in one click, in two clicks - make an order, in three clicks - 
+        pay for it.
+
+        <br></br>
+
+        In case of my potential customer she has few stores which sells flowers. Here is the top 
+        3 reasons to implement it. 
+
+        <br></br>
+
+        <p>
+            Firstly, it seems to be the fastest way to make an order: mobile cell phone is always in 
+            a pocket, application from the company I trust is already installed and I can make an order 
+            in 3 clicks.
+        </p>
+        <p>
+            Secondly, it could motivate a client to make an order. You are familiar with SMS 
+            notifications and notifications from others applications. Our mobile app also could 
+            send a notification a day before event to remind a client he or she might want to
+            buy a bucket of flowers (8th of March, 14th of February, Day of Mother, 1st of 
+            September, 31th of December etc)     
+        </p>
+        <p>
+            Finally, it can give you an excellent advertisment. Let's say the day after receiving 
+            flowers we ask a happy customer to write a postiive recommendation into the social network and 
+            as an appreciation for feedback we give him or her a 15% discount on the next order.   
+        </p>
+
+        <br></br>
+
+        How is it interesting for business owner? How to analyse it? 
+
+
+        <h3 style="text-align: left;">Discovery phase</h3> 
+
+        <p>
+            Despite on a great power of analytics only response from end users will give the most 
+            complete understanding of how right you are. In this case a talk with business owner 
+            or her representative was a next vital step in the disovery phase.   
+        </p>
+        <p>
+            What I was looking for is key business metrics of her business, plans for growth and 
+            current issues. For key business metrics I use key metrics from unit-economy: user 
+            acquisition cost (CAC), customer lifetime value (CLV) and conversion rate (C1)  
+        </p>
+        <p>
+            During our talk and interview I got answers on the many of my questions, some was left 
+            unresolved because some business data just is not recorded, also another valuable 
+            extra information was popped-up.  
+        </p>
+        <p>
+            Without mentioning exact numbers I got understanding about average purchase receipt, average 
+            amount of purchase receipt for average month, monthly expenses on marketing, percent of customers 
+            attracted by this marketing efforts and conclusion the majority of customers came 
+            naturally, without expenditures on marketing. Big percentage of customers comes online, 
+            from social networks. Conversion rate was not available and I offered general 1 from 10. 
+        </p>
+
+        <br></br>
+
+            Extra information was referred to issues business is faced at this moment. It was 
+            reaching plateau in obtaining new customers as the most of the current customers are 
+            the same people who returns to the shop again. Another issue was many clients are not 
+            tech-savvy or feels reluctant to install new app even if it promise them to give
+            benefits cashback system (customers complains about lack of storage space on their 
+            devices). 
+
+        <br>
+
+        <p>
+            The last interesting point from our talk was cashback system is used by her business. This 
+            cashback system is just a part of one interesting product. This product also offers a 
+            mobile app which out of the box covers 2 of 3 features I mentioned at the begining. It seems 
+            to be there is no reason to implement custom app, however there is still the reason to go 
+            with custom solution.   
+        </p>
+        <p>
+            This product has one drawback which might be crucial. It is designed for business in general 
+            and covers variety of different businesses. It means unification of business processes, it 
+            means ignoring some unique aspects of each business, it means ignoring valuable information 
+            from local market. All of this might be reasons behind your success of failure. That's why 
+            implementing custom mobile app is still a valuable option.  
+        </p>
+
+
+        <h3 style="text-align: left;">The analysis</h3> 
+
+        <p>
+            The first question we have to answer is regarding reaching plateau in acquiring new 
+            customers. Does it mean there is no space for growth because business reached the majority 
+            of the market? (this chain is not in the big city). It is an issue to find out data 
+            for the local market, but general analytics should fit too. If we trust 
+            <a href="https://s0.rbk.ru/v6_top_pics/resized/590xH/media/img/3/21/754888165246213.png">this</a> 
+            data from <a href="https://www.rbc.ru/business/07/03/2017/58bd68479a7947ffc224a695">this</a> 
+            source, then we should have a good capacity for growth.    
+        </p>
+        <br>
+            <p>
+                The next question is how does mobile app impact business metrics? How does it solve 
+                the issue with acquiring new customers and which gains it bring?
+            </p>
+            <p>
+                What is important for us is our monthly burn rate (gross) - expenditures on acquiring 
+                new customers including fixed costs to run the business, - should be less rather 
+                than revenue customer brought after the first and next orders.       
+            </p>
+            <p>
+                Let's calculate the customer acquisition cost (CAC). It is done by dividing our 
+                monthly customers on monthly budget on the marketing. We got the value X which is our customer 
+                acquisition cost. However, business owner said only part from monthly users came 
+                due marketing activities which means it should be included in our calculation. 
+                Now it looks as "our monthly customers" * "percent of customers gained due marketing" 
+                / "monthly budget on marketing" which gives our CAC. Furthermore, we based our 
+                calculations on users who made an order which should be only part from amount of 
+                people who noticed the advertisement. Early we agreed on conversion rate in 10%. 
+                The final formula to calculate the CAC is (("our monthly customers" * 
+                "percent of customers gained due marketing") / "conversion rate (0.1)") 
+                / "monthly budget on the marketing".  
+            </p>
+            <p>
+                Let's calculate now revenue from new customers we expect. It just multiplication  
+                of the "average purchase receipt" on the "amount of new customers". From our data above 
+                near half of client's target audience wants to make purchases online, near third of 
+                them wants to do this via mobile devices, total customer base reached by marketing 
+                activities was evaluated too. It should be 25% customers increase compared to current 
+                client's amount of customers. By multiplying this new customers on average purchase receipt 
+                we get information about expected revenue after running the mobile app. 
+            </p>
+            <p>
+                Viral effect from recommendations from mobile app in social networks should be explored in 
+                another topic. 
+            </p>
+            <p>
+                By having data about others expenses for running business, we could evaluate the 
+                profit that should be brought by launching mobile app and consequently return on 
+                investment in development.   
+            </p>
+
+        <h3 style="text-align: left;">The conclusion</h3> 
+
+        <p>
+            This model was built on data from business of my prospective client, from analytics of 
+            trusted sources, and part of data were assumed based on experience. The more accurate the data, 
+            the more effective the forecast and the quality of the decisions made. This is one of the 
+            reasons why development of software products often done by iterations (~2 weeks) - it is 
+            necessary to validate the formulated hypothesis as soon as possible with minimal investment. 
+        </p>
+
+    </body>
+</html>
