@@ -1,0 +1,84 @@
+---
+layout: post
+title: 'Case study: Flying drone DIY'
+date: '2023-03-19'
+author: Gelassen
+tags: 
+modified_time: '2023-03-19'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+
+        <div class="header" style="text-align: left;">
+        </div>
+
+        <h3>Intro</h3>
+        <p>
+            A week ago I worked on the project which aim was to build a drone from ordered 
+            accessories and write own or flash existing firmware. It was not a project 
+            for a potential customer, but research's milestone results and gained expertise 
+            might be intersting for my readers.   
+        </p>
+
+        <h3>Discovery</h3>
+        <p>
+            It was a new domain for me and at the first the project required a R&D phase. 
+            At the discovery phase we have to answer a set of questions necessary to the 
+            success of the project. This questions had been stated in the online document 
+            and the tech doc had been shared with the group. When key questions had been 
+            answered, a picture of what should be done became more or less clear. The 
+            next step should be to launch a pilot project to check the result of the research.  
+        </p>
+        <h3>Solution</h3>
+        <h4>Firmware</h4>
+        <p>
+            Market analysis shown a variety of different existing solutions. The most 
+            promising was the Ardupilot. <br>
+
+            Ardupilot supports quite big set of hardware suppliers, may be they even have 
+            some kind of partneship agreement. In case project woud have new requirements 
+            to the hardware which outscope from officially supported by the Ardupilot, 
+            existing Ardupilot codebase could be a good staring point to make a fork and 
+            write our own customised firmware version. <br> 
+            
+            The market also has other systems and solutions. Of course, it is also possible to 
+            write our drone's firmware from scratch, but it will require an order of magnitude 
+            more resources, that's why to check existing solutions at first is important.   
+        </p>
+        <h4>Hardware</h4>
+        <p>
+            The most important part of drone hardware is a pilot controller. Ardupilot supports 
+            many models, but at this stage CUBE orange was checked <br>
+            <a href="https://aliexpress.ru/item/1005005003735399.html?sku_id=12000031312517604&spm=a2g2w.productlist.search_results.2.2e514aa6o7xK1K">Reference on the sample at the aliexpress.</a> 
+            <br>
+            On the image below the rest of drone's components are shown (CUBE compatible, one of the options) <br>
+            <a href="https://drive.google.com/file/d/1fYnmRMu9AGhwXF4wh0HSwgrNqt9tfdVf/view?usp=sharing">Reference</a>
+        </p>
+        <h4>The problem of compatibility of the flight controller and the Remote Controll (radio transmitter directly in the hands)</h4>
+        <p>
+            Research phase revealed RC usually developed for specific drone and supplied by manufacturer. 
+            There is a cross-compatibility issue. However, the main problem is in the frequency and protocol 
+            used. According to the discussions, multi-protocol controllers [1] are compatible with a large number 
+            of flight controllers / drones. <br>
+
+            Althought top drone's models on the market has extra layers of security to prevent 
+            hijacking and some other issues. <br>
+            
+            This issue requires extra research, but at this stage we could go further with 
+            multi-protocol support radio controller like 
+            <a href="https://www.radiomasterrc.com/products/tx16s-hall-radio-controller
+            https://aliexpress.ru/item/1005004798148426.html?sku_id=12000030525171380&spm=a2g2w.productlist.search_results.5.7cca4aa6vMV3MV
+            ">TX16S Hall Radio Controller</a>
+        </p>
+        <h3>Post Scriptum</h3>
+        <p>
+            Research phase helped to rised up and clarified questions to build a drone. The next 
+            pilot phase should help to verify assumptions and come to production ready solution. 
+            At this moment the further work has been hold on due the decisions to go at first 
+            by the different way. The current tech doc is avaialble by <a href="https://docs.google.com/document/d/1_WgitYAnTEcGtN1k8gPY6BUpVtkGZJvxc-uoXbCFgYc/edit?usp=sharing">link</a>. 
+        </p>
+    </body>
+</html>
