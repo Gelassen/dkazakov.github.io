@@ -1,0 +1,203 @@
+---
+layout: post
+title: 'Swap tech notes. Part 1'
+date: '2023-04-02'
+author: Gelassen
+tags: 
+modified_time: '2023-04-02'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>The intro</h3>
+        <p>
+            Fow the passed year I have been working on my personal project <a href="https://github.com/Gelassen/swap">Swap</a> 
+            which is goods and services exchange platform powered by blockchain 
+            technology. Started with a backend (NodeJs, JS, MySql) and a mobile 
+            client (Android, Kotlin, Java, Espresso), it starts utilise ethereum 
+            smart contracts (Solidity, Hardhat, Jest) and automatization (Git 
+            Actions, private chain, shell scripts). <br><br>
+            
+            It has passed a few product pivots and become mature enough to start 
+            share tech details of its implementation which might be interesting 
+            for my clients and readers with the technical (software engineering) 
+            background. <br><br>
+            
+            This is a 1st part of seria of publications on this topic which will 
+            cover ethereum smart contracts integration. 
+        </p>
+        <h3>The initial idea</h3>
+        <p>
+            The idea behind this project is to give people an option to exchange 
+            products and services without money (barter). <br><br>
+            
+            I am belong to the group of people who are quite concerned regarding 
+            plans and attempts from some groups in the power to limit peoples 
+            freedoms and rights. I am not talking about people in the government, 
+            but rather talking about people who stays behind people in governments. <br><br>
+
+            When two years Kazan's government issued a policy to limit access to 
+            the public transport to some groups of people, I quickly did a 
+            <a href="https://github.com/Gelassen/open-car-share">proof-of-concept (PoC) of the platform</a> 
+            which should help to find transport within or between cities. When I 
+            discovered rising risks in similar way limit access to banks and a 
+            job market, I started to work on this product.    
+        </p>
+        <h3>Where is blockchain could help</h3>
+            Different blockchain-like technologies promise two valuable things: 
+            decentralized work (p2p, similar to torrents trackers) and data   
+            records which are very difficult, close to unrealistic to reverse or 
+            tamper. <br><br>
+            
+            That's why blockchain usage for this project becomes very interesting. <br><br>
+
+            However, after several months of work in integration ethereum into 
+            the project, <a href="https://www.linkedin.com/posts/dmkazakov_tagtochainposts-ethereum-blockchain-activity-6975709111514472448-66Jp?utm_source=share&utm_medium=member_desktop">
+                not all what has been promised can be launched in the real project.
+            </a>  <br><br>
+
+            It is unlikely to run all your app's logic on the chain because of its 
+            gas costs. It means we still ends up with client-server application. 
+            However to have data records with minimal, close to unrealistic chance 
+            to be reversible or tampered is still true. 
+        <p>
+        </p>
+        <h3>Interesting points</h3>
+        <p>
+            ERC721 is the current standard for non-fungible tokens (NFT) which is 
+            the best fit for project requirements, but it is important to keep a 
+            hand on discussions on new proposals. <br><br>
+
+            Engineers from <a href="https://www.openzeppelin.com/contracts">openzeppelin</a> 
+            do a good job to implement variety of confirmed ethereum standards 
+            which can be integrated to your own contracts to speed up the development.
+        </p>
+        <h4>Defensive programming</h4>
+        <p>
+            Defensive programming I have not been using for a while, but ethereum 
+            smart contracts actively use it. There is also such things like 
+            'modifiers' which could be applied to the functions. <br><br>
+
+            <pre>
+                modifier bothHaveValidTokens(Match memory subj) {
+                    require(_swapValueContract.offer(subj._valueOfFirstUser)._isConsumed != true 
+                                && _swapValueContract.offer(subj._valueOfSecondUser)._isConsumed != true,
+                                "Tokens should not be already consumed.");
+                    require(block.timestamp < _swapValueContract.offer(subj._valueOfFirstUser)._availabilityEnd 
+                                && block.timestamp < _swapValueContract.offer(subj._valueOfSecondUser)._availabilityEnd,
+                                "One or both tokens has been expired.");  
+                    _;
+                }
+            </pre> <br><br>
+
+            which are later used like this: <br><br>
+            
+            <pre>
+                function _approveSwap(address msgSender, Match memory subj) private 
+                    callerIsRegisteredUser(msgSender, subj._userFirst, subj._userSecond)
+                    userExists(subj._userFirst, subj._userSecond)
+                    bothHaveValidTokens(subj) 
+                    {
+                        // the main code block ...  
+                    }
+            </pre>
+
+        </p>
+        <h4>Who is a sender</h4>
+        <p>
+            Solidity supports such thing like `msg.sender` which allows to get 
+            an address of the caller. <br><br>
+
+            By using ether.js you could call contract.connect(<signer>) to change 
+            the context, in other words msg.sender address. This signer should be 
+            a wallet/account, it could not be another contract. <br><br>
+            
+            However when inside your contract this contract calls another contract 
+            msg.sender would be an address of the contract caller – not an address 
+            which was defined during the initial call, e.g. 
+            `contract.connect(<signer>)`. <br><br>
+                
+            It might be important during ERC721 token approve call: we could 
+            approve one address, but eventually authorized ERC721 token function 
+            would be called by deployed contract which would end up with revered 
+            tx as this address has not been approved.
+        </p>
+        <h4>Data structures, memory and gas usage</h4>
+        <p>
+            Solidity from the out-of-the box doesn't support many data structures 
+            which become common in others high level languages. I haven’t found 
+            any reference on Sets or HashMaps, but here is a 
+            <a href="https://ethereum.stackexchange.com/questions/13167/are-there-well-solved-and-simple-storage-patterns-for-solidity">collection of structures</a> 
+            implemented by the community via smart contracts. <br><br> 
+
+            Compared with java memory management there is no such thing like a 
+            garbage collector, all allocated memory is never reclaimed back at 
+            least at this point of development. 
+            (<a href="https://docs.soliditylang.org/en/v0.8.7/internals/layout_in_memory.html">Official docs</a>). 
+            There is no such thing like dynamic resizable arrays and at the same 
+            time the compiler allows potentially dangerous operations with array 
+            definition and usage. 
+            (<a href="https://ethereum.stackexchange.com/questions/40045/pushing-a-struct-to-an-array-which-contains-an-array-itself">ethereum.stackexchange.com discussion</a>) <br><br>
+
+            All operations on chain require gas. First iteration of the project 
+            shown, with growth of the dataset supported by the smart contract 
+            running business logic which involves non-optimized iteration over 
+            a dataset start costs thousands and millions of dollars by current 
+            Ether\USD exchange rate. Optimization might give some gains, but in 
+            the long term this problem will remain. It was a reason to pivot a 
+            project on another direction,       
+        </p>
+        <h4>Security concerns</h4>
+        <p>
+            I was looking for some kind enumerable interface for a data and there 
+            is one, but there is also a security issue with it. <br><br>
+
+            ERC721 standard allows to have Enumerable interface which gives access 
+            to token ids. Although, there is well known security attack on its 
+            concept and implementation by overusing balanceOf() call (or may be 
+            something different). <br><br>
+
+            It was just one of examples which affected my personal scope of work, 
+            but it brings security concerns to the top of ethereum powered 
+            projects due the development even for things which is assumed standard 
+            like API.
+        </p>
+        <h4>Gas overhead and project pivot</h4>
+        <p>
+            Minting a token might cost a huge amount of money (~40 USD at Jan 2021) 
+            which might put a cross on the whole idea of using blockchain for 
+            securing exchanges. More info is 
+            <a link="https://www.reddit.com/r/ethdev/comments/loq4qs/how_much_does_it_cost_to_mint_erc721_tokens/">here</a> <br><br>
+            
+            Some dev instruments like Hardhat support compiler time contract gas 
+            cost evaluation which should give quite precise estimates on how much 
+            gas - and money! - it would cost to deploy a contract, emission of 
+            new tokens and contract operations. <br><br>
+            
+            In case of the first iteration of Swap smart contracts, the PoC shown 
+            the total cost of contract deployment & operation on the production 
+            chain brings financial overhead which makes project non-profitable. <pr></pr>
+            
+            This results caused a 1st project pivot: leave only the most valuable 
+            product function on chain and to do the rest on the backend. This 
+            operations covers 'mint a token', 'exchange of tokens' and 
+            'approval of intentions'. Also to speed up a development and future 
+            operations, the project continue work on not on an official chain 
+            neither test chain, but on the private chain -- nodes deployed on 
+            own PC & servers and linked with each other under the full control 
+            of the organisation.      
+        </p>
+        <h3>What is next</h3>
+        <p>
+            There are many others interesting things I have discovered when have 
+            been working with smart contract, the rest you can find in the 
+            tech doc to the swap project. <br><br>
+
+            Next publications in this seria will cover test coverage of a smart 
+            contract, backend & frontend and their test coverage, setting up a 
+            private nodes network and project deployment automatization.  
+        </p>
+    </body>
+</html>
