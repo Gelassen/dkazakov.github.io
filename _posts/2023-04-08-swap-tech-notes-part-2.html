@@ -1,0 +1,208 @@
+---
+layout: post
+title: 'Swap tech notes. Part 2'
+date: '2023-04-08'
+author: Gelassen
+tags: 
+modified_time: '2023-04-08'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>Intro</h3>
+        <p>
+            This a second part of the seria of publications regarding work on 
+            <a href="https://github.com/Gelassen/swap">the Swap project</a>. 
+            It covers a test coverage of smart contracts. 
+        </p>
+        <h3>Test coverage options</h3>
+        <h4>Over the Remix</h4>
+        <p>
+            Ethereum dev team provides its own IDE called Remix. Besides many 
+            others things it allows to quickly deploy and run smart contracts. 
+            It has convenient UI which provides a set of a smart contract 
+            methods to interact with. <br><br>
+            
+            Remix functionality might be a good option to quickly verify a 
+            correctness of just developed contract without many extra 
+            dependencies. <br><br>
+
+            However, it has several limitations where two major ones are lack 
+            of logs and unclear error messages from the ledger. 
+        </p>
+        <h4>Over an another smart contract</h4>
+        <p>
+            There is another interesting way to test smart contracts by 
+            implementing another contract which will act as a robot which 
+            invokes another contract interface methods and verify the result.
+            <br><br>
+            
+            It is something I have met during my research. It still has 
+            its place in the Ethereum test world. Despite on I picked up the 
+            Hardhat, I use this approach too to verify things which are easier 
+            to do on the contract layer.  
+        </p>
+        <h4>Over the Hardhat</h4>
+        <p>
+            <a href="https://hardhat.org/hardhat-runner/docs/getting-started">
+                Hardhat is a development environment for Ethereum software.
+            </a>. By being integrated into Visual Studio Code IDE it covers 
+            all my current demands to the ethereum dev environment including 
+            clear error messages from the ledger. <br><br>
+
+            Hardhat runs code on its own locally deployed network which allows 
+            to quickly deploy, execute and test contracts. <br><br> 
+
+            Deployment:
+            <pre>
+                describe("Swap value suite", async function() {
+
+                    async function deploy() {
+                        const factory = await ethers.getContractFactory("SwapValue");
+                        const contract = await factory.deploy();
+                
+                        const utilsFactory = await ethers.getContractFactory("Utils");
+                        const contractUtils = await utilsFactory.deploy();
+                        return { contract, contractUtils };
+                    }
+
+                    // the rest test methods 
+                })
+            </pre> <br><br>
+
+            Test case:
+            <pre>
+                it("On emit new tokens balance of user changes", async function() {
+                    const accounts = await ethers.getSigners();
+                    const owner = accounts[0].address;
+                    const user1 = accounts[1].address;
+                    const { contract } = await loadFixture(deploy);
+                    await expect(await contract.balanceOf(owner)).to.be.equal(0);
+            
+                    // {value: ethers.utils.parseEther("0.123") }
+                    const customMetadata = { 
+                        _offer : "Software development for Android.", 
+                        _availableSince: 0,
+                        _availabilityEnd: 0,
+                        _isConsumed: false,
+                        _lockedUntil: 1000 
+                    };
+                    await contract.safeMint(owner, customMetadata, "https://gelassen.github.io/blog/");
+            
+                    await expect(await contract.balanceOf(owner)).to.be.equal(1);
+                });
+            </pre>
+        </p>
+        <h4>Over web3j on the mobile client</h4>
+        <p>
+            The test coverage on the mobile client (and server side) is done 
+            as a part of integration tests. 
+        </p>
+        <h3>Testnets</h3>
+        <p>
+            After automating tests locally, it is still important to verify code 
+            on the production chain. The Ethereum team & the community provides 
+            special testnets for such purposes. <br><br>  
+
+            After the Merge event which has been happened in the middle of autumn 
+            in 2022, only two testnets are left alive. <br><br>
+            
+            My experience with Sepolia testnet is negative, they had some issue 
+            they promised to solve after 5th of october 2022, but even later 
+            later I still experience with some issues. <br><br>
+            
+            After that the Goerly became is the only option left for tests, but 
+            unexpectedly it became very slow. <br> 
+            Web3j has a time threshold of 10 minutes. Goerly testnet increases 
+            time to mint a token - receive a receipt. It was near a minute on 
+            10th of October, 4 hours 5 days later and 10.5 hours on 27th of 
+            October <br> <br>
+
+            Not sure about exact cause of such changes in the testnet, but it 
+            made further development quite slow and painful. After research I 
+            decided to move to deploy own private network to continue 
+            development. It was good because from business perspective I also 
+            made a pivot to launch product on a private chain as it had been 
+            shown in the previous publication of this seria.  
+        </p>
+        <h3>Private chain</h3>
+        <p>
+            At the moment of writing Ethereum offers Mainnet and two test nets: 
+            Sepolia and Goerli. A bunch of tools, e.g. hardhat, provides local 
+            development testnet. However, deploying your own testnet on your 
+            machine or VMs is out of scope in the official documentation. <br><br> 
+
+            There is a collection of available public testnets 
+            https://chainlist.org/. <br><br> 
+
+            Ethereum official repository provides source code for chain and such 
+            tool as <a href="https://geth.ethereum.org/docs/tools/puppeth">puppeth</a> 
+            for a quick configuration of the private chain. <br><br>  
+
+            1. Create folders for nodes <br><br>
+            2. Create accounts in nodes (we will need to remember address of the key and secret key by itself): <br>
+            <pre>
+                $geth --datadir ./node1/data account new <br>
+                $geth --datadir ./node2/data account new <br>
+                $geth --datadir ./node3/data account new 
+            </pre> <br><br>
+            3. Generate genesis block (the main configuration file): <br>
+            <pre>
+                $puppeth    
+            </pre> <br><br>
+            4. Export chain configuration: <br>
+            <pre>
+                $puppeth (reselect option 2. Manage existing genesis)
+            </pre> <br><br>
+            5. Initialize all nodes with chain config: <br>
+            <pre>
+                $geth --datadir ./node1/data init <chain config>.json <br>
+                $geth --datadir ./node2/data init <chain config>.json <br>
+                $geth --datadir ./node3/data init <chain config>.json 
+            </pre> <br><br>
+            6. Start nodes: <br>
+            <pre>
+                $geth --datadir ./node1/data --port 2001 (default authrpc.port 8551) <br>
+                $geth --datadir ./node2/data --port 2002 --authrpc.port 8552 <br>
+                $geth --datadir ./node3/data --port 2003 --authrpc.port 8553 
+            </pre> <br><br>
+            7. Link all nodes with a main one: <br>
+            <pre>
+                $geth attach ipc:node1/data/geth.ipc <br>
+                $admin.nodeInfo.enode <br>
+                (reply would be something similar to "enode://64dccd02d5d1166cfb4913f0d0c164dff2b9c61fd55182461010569e15319c7ff5cb4dc8b502e441c38c80ae1b42c2cc95c7e170ed973bb0353d766669c5447c@195.178.22.21:2001?discport=39805") <br>
+                $geth attach ipc:node2/data/geth.ipc <br>
+                $admin.addPeer(enode://64dccd02d5d1166cfb4913f0d0c164dff2b9c61fd55182461010569e15319c7ff5cb4dc8b502e441c38c80ae1b42c2cc95c7e170ed973bb0353d766669c5447c@127.0.0.1:2001")
+            </pre> <br><br>
+
+            Repeat for all nodes: each node should have reference in peers on all OTHERS nodes. Known issue: https://github.com/ethereum/go-ethereum/issues <br><br>
+
+            8. To make node miner:<br>
+            <pre>
+                $geth attach ipc:node3/data/geth.ipc <br>
+                $personal.unlockAccount(<account>) <br>
+                $miner.setEtherbase(<account for collecting rewards from mining>) <br>
+                $miner.start() <br>
+                $miner.stop() <br>
+                $eth.getBalance(eth.accounts[0])
+            </pre> 
+        </p>
+        <h3>What is next</h3>
+        <p>
+            This publication covers options to cover by tests ethereum smart 
+            contracts, a recent state with testnets, a way to deploy private 
+            network. <br><br>
+
+            Automation tests strategy is to cover all general workflows, 
+            important corner cases plus 'test per found bug'. <br><br> 
+
+            For more details you could check the <a href="https://github.com/Gelassen/swap">source code</a>. Part 1 of this 
+            seria is available by <a href="https://gelassen.github.io/blog/2023/04/02/swap-tech-notes-part-1.html">link</a>. 
+
+            Next publications in this seria will cover backend & frontend and 
+            their test coverage, project deployment automatization. <br><br>
+        </p>
+    </body>
+</html>
