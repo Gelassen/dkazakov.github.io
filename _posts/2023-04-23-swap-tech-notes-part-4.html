@@ -26,7 +26,7 @@ modified_time: '2023-04-23'
             initial codebase cloud repository. Several years ago they 
             introduced Github Actions as their CI tool. When demand in CI for 
             project became a vital task, it was obvious to enable Github 
-            Actions CI as a native for this platform solution <br><br>   
+            Actions CI as a native solution for this platform. <br><br>   
             
             The configuration script is available below: <br><br>
 
@@ -130,10 +130,10 @@ modified_time: '2023-04-23'
             test database, runs all tests and prepare test reports. <br><br>
 
             I am not satisfied with this solution. Due further work I faced with 
-            some bizzare issues which I haven't resolved yet in a to give always 
+            some bizzare issues which I haven't resolved yet which is to give always 
             correct feedback on codebase integrity. I will touch this issues in 
-            the next sections, but thinking & discussing possible mitigation steps to 
-            overcome such issues in this or another CI tool I agreed on the best 
+            the next sections, but after thinking & discussing possible mitigation steps to 
+            overcome such issues in this or another CI tool, I agreed on the best 
             solution is to make all this CI automation within a bash script to split up 
             valuable automation logic from CI's specific implementation. A known 
             drawback is it will disable us from using some important CI's 
@@ -143,7 +143,7 @@ modified_time: '2023-04-23'
         <p>
             At this moment server API tests, smart contracts tests and mobile 
             client tests have been written already, but the task is to make 
-            them run on each commit to the repository to confirm commit does 
+            them run on each commit to the repository to confirm a commit does 
             not break anything. <br><br>
 
             Tasks of CI responsible for setting up test environment and execute 
@@ -318,7 +318,7 @@ modified_time: '2023-04-23'
             --allow-insecure-unlock is still necessary, despite on it is a hack 
             which should be done before deployment into production.        
         </p>
-        <h3>Out of scope</h3>
+        <h3>Out of the scope</h3>
         <p>
             Static analysis tools, mobile client publishing automation, further 
             CI configuration to support email notifications etc are important 
