@@ -59,10 +59,9 @@ modified_time: '2023-07-22'
             into docker image (build and configuration file) <br><br>
 
             There is also Docker swarm (clusters) and Kubernetes (containers in cloud) which 
-            are out of scope of this publication. You can learn more about them here and 
-            here. (share links) 
-            https://docs.docker.com/engine/swarm/key-concepts/
-            https://www.docker.com/products/kubernetes/ <br><br>
+            are out of scope of this publication. You can learn more about them 
+            <a href="https://docs.docker.com/engine/swarm/key-concepts/">here</a> and 
+            <a href="https://www.docker.com/products/kubernetes/">here</a>. <br><br>
         </p>
         <h3>Custom image per each service</h3>
         <p>
@@ -155,8 +154,8 @@ modified_time: '2023-07-22'
                       condition: service_healthy
             </pre> <br><br>
 
-            Linux Alpine image because of its lightweightness. Docker allows to setup 
-            order in which containers wil lbe launched (depends_on block)
+            Linux Alpine image is used because of its lightweightness. Docker allows to setup 
+            order in which containers will be launched (depends_on block)
         </p>
         <h4>Docker custom image: blockchain</h4>
         <p>
