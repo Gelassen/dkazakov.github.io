@@ -1,0 +1,333 @@
+---
+layout: post
+title: 'Docker: multicomponent project deployment'
+date: '2023-07-22'
+author: Gelassen
+tags: 
+modified_time: '2023-07-22'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>Executive summary</h3>
+        <p>
+            Sophisticated system deployment and launch had been (mostly) successfully 
+            migrated to the docker. <br><br>
+
+            Launch of the system is done within one click/one command. Utilization of a host 
+            machine resource become more effective - ratio between speed and CPU\RAM 
+            footprint. <br><br>
+
+            In many aspects it is better rather than VM usage, except it doesn't give 
+            you a full isolation and many things might go wrong if you or 3rd party 
+            developers will give root privileges for some of your containers. <br</p>><br>
+
+            Another aspect to consider is some tings doesn't work out-of-the-box and 
+            requires additional efforts for customization and sometime bugfix as it was 
+            with blockchain calculated ledger retention. Maintenance of docker scripts 
+            might have its own cost.  
+        </p>
+        <h3>Why docker</h3>
+        <p>
+            With project growth there is an increasing demand to speed-up deployment 
+            process - smooth and fast, preferably with one click. So far many different 
+            tech has been used for this deployed and run into virtual machine. By putting 
+            VM into the hibernate mode we could stop and immediately resume our running 
+            services. <br><br> 
+
+            At the first view Docker looks us a superior solution for a current 
+            virtualization technology. Indeed experience shown it is quicker and better 
+            utilize machine resources and can be a better alternative for existing VMs, 
+            but it is not a quite virtualization technology. Docker proficiently uses OS 
+            isolation and virtualization mechanisms to run its containers/applications, but 
+            they are executed directly on the host machine kernel vs guest OS in case of 
+            VMs. From one side it increase performance and portability, on another side 
+            because of direct launch on the host OS kernel isolation is not so robust - 
+            giving root privileges to an application might lead to dangerous results 
+            which is not an option in case of virtual machines.      
+        </p>
+        <h3>Docker image vs docker compose</h3>
+        <p>
+            Docker allows to create an images of your software and quickly deploy on 
+            your machine. However, if you have many components in your projects you have 
+            to look at Docker compose. <br><br>
+            
+            Docker compose allows to orchestrate and tune a variety of applications which 
+            should work together. Previously each application has to be dockerised - wrap 
+            into docker image (build and configuration file) <br><br>
+
+            There is also Docker swarm (clusters) and Kubernetes (containers in cloud) which 
+            are out of scope of this publication. You can learn more about them here and 
+            here. (share links) 
+            https://docs.docker.com/engine/swarm/key-concepts/
+            https://www.docker.com/products/kubernetes/ <br><br>
+        </p>
+        <h3>Custom image per each service</h3>
+        <p>
+            Majority of popular products already offer their docker image which usually 
+            can be tuned over input parameters passed from docker compose config file. 
+            However, if you need to customize an image, docker compose is not 
+            intended for this - you have write your own image. In my practice 
+            I have to write my own image based on existing ones. <br><br>
+            
+            General practice is to put each component of your project, e.g. server, database, etc, 
+            to a separate service. Docker images are recommended to keep small and concise. 
+            For my scenario it is also reasonable to create a separate network for my containers 
+            where are just several ports have been forwarded to external world. <br><br>
+
+            My project has a mobile client, a server, database and privately hosted blockchain. 
+            Each of this components except of a mobile client became a separate service 
+            in docker.  
+        </p>
+        <h4>Docker custom image: database</h4>
+        <p>
+            Below is my script for a database container. It uses general mysql image 
+            without any customization. Docker allows to map host's machine volumes, 
+            in this container it is used to automate schema creation - anything within 
+            docker-entrypoint-initdb.d will be executed on mysql startup. <br><br>
+            
+            <pre>
+                database:
+                  hostname: swap-database
+                  container_name: swap-database-default
+                  image: mysql:8.0.33 
+                  env_file:
+                    - .env
+                  environment:
+                    - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+                    - "MYSQL_DATABASE=${MYSQL_DATABASE}"
+                    - "MYSQL_USER=${MYSQL_USER}"
+                    - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+                    - "MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}"
+                  volumes:
+                    - ./database/custom-sql-commands.sql:/docker-entrypoint-initdb.d/custom-sql-commands.sql 
+                    - ./database/custom.cnf:/etc/custom.cnf
+                    - ./infrastructure/mysql:/var/lib/mysql
+                    - ./server/db_schema:/docker-entrypoint-initdb.d:rw
+                  ports:
+                    - "3307:3306"
+                  networks:
+                    priv-eth-net:
+                  restart: on-failure
+                  deploy:
+                    resources:
+                      limits:
+                        cpus: '0.5'
+                        memory: 512M
+                  healthcheck:
+                    test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+                    interval: 7s
+                    timeout: 20s
+                    retries: 3
+            </pre> <br><br>
+
+            Docker provides features to check application state within container over 
+            healtcheck block. In this case a plain ping is used. 
+        </p>
+        <h4>Docker custom image: server</h4>
+        <p>
+            The similar script is used for a server deployment and launch: <br><br>
+            
+            <pre>
+                server:
+                  hostname: swap-server
+                  container_name: server
+                  image: node:18-alpine 
+                  working_dir: /usr/src/swap/server
+                  volumes:
+                    - ./server:/usr/src/swap/server
+                    - ./infrastructure/server:/root
+                  command: > 
+                    sh -c "npm install && npm run start:docker"
+                  ports:
+                    - "3000:3000" # port depends on environment config, keep an eye on it when env will be changed
+                  networks:
+                    priv-eth-net:
+                  deploy:
+                    resources:
+                      limits:
+                        cpus: '0.5'
+                        memory: 512M
+                  depends_on:
+                    database:
+                      condition: service_healthy
+            </pre> <br><br>
+
+            Linux Alpine image because of its lightweightness. Docker allows to setup 
+            order in which containers wil lbe launched (depends_on block)
+        </p>
+        <h4>Docker custom image: blockchain</h4>
+        <p>
+            Blockchain require three services: bootnode, miner and prc-endpoint. For 
+            this aims I also had to write custom images. <br><br>
+            
+            <pre>
+                # blockchain section
+                geth-bootnode:
+                  hostname: geth-bootnode
+                  container_name: geth-bootnode
+                  env_file:
+                    - .env
+                  image: geth-client
+                  build:
+                    context: ./blockchain/private-chain/node-bootnode
+                    args:
+                      - ACCOUNT_PASSWORD=${ACCOUNT_PASSWORD}
+                      - NODE_ACCOUNT_PWD_FILENAME=${NODE_1_ACCOUNT_PWD_FILENAME}
+                      - NODE_ACCOUNT_PWD=${NODE_1_ACCOUNT_PWD}
+                      - NODE_ACCOUNT=${NODE_1_ACCOUNT}
+                      - NETWORK_ID=${NETWORK_ID}
+                      - BOOTNODE_NODEKEYHEX=${BOOTNODE_NODEKEYHEX}
+                      - NETWORK=${NETWORK}
+                  environment:
+                    - NODE_ACCOUNT=${NODE_1_ACCOUNT}
+                  # Ref. issue: https://github.com/ethereum/go-ethereum/issues/27298
+                  volumes:
+                    # - ./infrastructure/eth-chain/bootnode/geth/chaindata:/tmp/geth/chaindata
+                    - ./infrastructure/eth-chain/bootnode/geth/ethash:/tmp/geth/ethash
+                    - ./infrastructure/eth-chain/bootnode/ethash:/root/.ethash
+                    - /etc/localtime:/etc/localtime:ro
+                  networks:
+                    priv-eth-net:
+              
+                geth-rpc-endpoint:
+                  hostname: geth-rpc-endpoint
+                  container_name: geth-rpc-endpoint
+                  env_file:
+                    - .env
+                  build:
+                    context: ./blockchain/private-chain/node-geth-rpc-endpoint
+                    args: 
+                      - NODE_ACCOUNT_PWD_FILENAME=${NODE_2_ACCOUNT_PWD_FILENAME}
+                      - NODE_ACCOUNT_PWD=${NODE_2_ACCOUNT_PWD}
+                      - NODE_ACCOUNT=${NODE_2_ACCOUNT}
+                      - NETWORK_ID=${NETWORK_ID}
+                      - BOOTNODE=${BOOTNODE}
+                      - NETWORK=${NETWORK}
+                  environment:
+                    - NODE_ACCOUNT=${NODE_2_ACCOUNT}
+                  volumes:
+                    # - ./infrastructure/eth-chain/rpc-endpoint/geth/chaindata:/tmp/geth/chaindata
+                    - ./infrastructure/eth-chain/rpc-endpoint/geth/ethash:/tmp/geth/ethash
+                    - ./infrastructure/eth-chain/rpc-endpoint/ethash:/root/.ethash
+                    - /etc/localtime:/etc/localtime:ro
+                  depends_on:
+                    - geth-bootnode    
+                  ports:
+                    - "8545:8545"
+                  networks:
+                    priv-eth-net:
+              
+                geth-miner:
+                  hostname: geth-miner
+                  container_name: geth-miner
+                  env_file:
+                    - .env
+                  build:
+                    context: ./blockchain/private-chain/node-miner
+                    args: 
+                      - NODE_ACCOUNT_PWD_FILENAME=${NODE_3_ACCOUNT_PWD_FILENAME}
+                      - NODE_ACCOUNT_PWD=${NODE_3_ACCOUNT_PWD}
+                      - ETHERBASE_ACCOUNT=${NODE_3_ACCOUNT}
+                      - NODE_ACCOUNT=${NODE_3_ACCOUNT}
+                      - NETWORK_ID=${NETWORK_ID}
+                      - BOOTNODE=${BOOTNODE}
+                      - NETWORK=${NETWORK}
+                  environment:
+                    - NODE_ACCOUNT=${NODE_3_ACCOUNT}
+                  volumes:
+                    # - ./infrastructure/eth-chain/miner/geth/chaindata:/tmp/geth/chaindata
+                    - ./infrastructure/eth-chain/miner/geth/ethash:/tmp/geth/ethash
+                    - ./infrastructure/eth-chain/miner/ethash:/root/.ethash
+                    - /etc/localtime:/etc/localtime:ro
+                  depends_on:
+                    - geth-bootnode
+                  networks:
+                    priv-eth-net:
+              
+                  deploy:
+                    resources:
+                      limits:
+                        cpus: '2'
+                        memory: 2048M
+            </pre> <br><br>
+
+            Environment arguments for custom image are passed from .env file defined 
+            for each service. Matched volumes allows to preserve setup and configuration 
+            of the chain, but I had not managed yet to preserve calculated ledger between 
+            launches. There is unclear error when necessary path has been mapped that 
+            left unresolved for now. It is good for tests or development mode, but for 
+            launch in production this issus should be solved.<br><br>
+
+            Growth of the ledger might easily occupy all available space. Docker support 
+            host machine resource constraints used by each container and limits for CPU and 
+            RAM has been set. <br><br> 
+            
+            Below is a custom docker image for one of this blockchain services. The rest are
+            look similar: <br><br>
+
+            <pre>
+                FROM ethereum/client-go:v1.10.1
+
+                ARG NODE_ACCOUNT
+                ARG NODE_ACCOUNT_PWD
+                ARG NETWORK_ID
+                ARG BOOTNODE
+                ARG NETWORK
+
+                ENV NODE_ACCOUNT=${NODE_ACCOUNT}
+                ENV NETWORK_ID=${NETWORK_ID}
+                ENV BOOTNODE_NODEKEYHEX=${BOOTNODE_NODEKEYHEX}
+                ENV NETWORK=${NETWORK}
+
+                COPY ./swap.ethash.genesis.json /tmp
+
+                COPY ./boot.key /tmp
+
+                RUN mkdir -p /tmp/keystore
+
+                COPY ./keystore/${NODE_ACCOUNT_PWD_FILENAME} /tmp/keystore
+
+                RUN geth --datadir /tmp init /tmp/swap.ethash.genesis.json \
+                    && rm -f ~/.ethereum/geth/nodekey 
+
+                RUN echo ${NODE_ACCOUNT_PWD} >> /tmp/pwd.txt
+
+                COPY ./entrypoint.sh /tmp
+
+                RUN chmod +x ./tmp/entrypoint.sh
+
+                # This way entrypoint usage would ignore OS signals sent to the container. That might cause some issues
+                ENTRYPOINT ./tmp/entrypoint.sh ${NODE_ACCOUNT} ${NETWORK_ID} ${BOOTNODE_NODEKEYHEX} ${NETWORK}
+            </pre> <br><br>
+
+            To use input arguments passed from docker compose config file, they should 
+            be copied in local ENVIRONMENT variables. <br><br>
+
+            Some commands are not allowed to be launched from docker image and a separate 
+            shell script is used as a workaround for this. <br><br>
+
+            For more details you can check the <a href="https://github.com/gelassen/swap">source code</a> 
+            of the project. 
+        </p>
+        <h3>A separate network for docker</h3>
+        <p>
+            A separate network for group of containers isolates all project's services 
+            from external world, except ports which are intentionally forwarded for 
+            external access. Which network to use is define for each service above 
+            and how network has been setup is shown below: <br><br>
+            
+            <pre>
+                networks:
+                  priv-eth-net:
+                    driver: bridge
+                    ipam:
+                      config:
+                        - subnet: 172.16.254.0/28
+            </pre>
+        </p>
+        <!-- <h3>Summary</h3> may be makes sense to put it into as a first item? -->
+    </body>
+</html>
