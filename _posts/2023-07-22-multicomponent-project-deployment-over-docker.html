@@ -55,7 +55,7 @@ modified_time: '2023-07-22'
             to look at Docker compose. <br><br>
             
             Docker compose allows to orchestrate and tune a variety of applications which 
-            should work together. Previously each application has to be dockerised - wrap 
+            should work together. Before that each application has to be dockerised - wrapped 
             into docker image (build and configuration file) <br><br>
 
             There is also Docker swarm (clusters) and Kubernetes (containers in cloud) which 
@@ -68,7 +68,7 @@ modified_time: '2023-07-22'
             Majority of popular products already offer their docker image which usually 
             can be tuned over input parameters passed from docker compose config file. 
             However, if you need to customize an image, docker compose is not 
-            intended for this - you have write your own image. In my practice 
+            intended for this - you have to write your own image. In my practice 
             I have to write my own image based on existing ones. <br><br>
             
             General practice is to put each component of your project, e.g. server, database, etc, 
@@ -265,7 +265,7 @@ modified_time: '2023-07-22'
             RAM has been set. <br><br> 
             
             Below is a custom docker image for one of this blockchain services. The rest are
-            look similar: <br><br>
+            looking similar: <br><br>
 
             <pre>
                 FROM ethereum/client-go:v1.10.1
@@ -315,7 +315,7 @@ modified_time: '2023-07-22'
         <p>
             A separate network for group of containers isolates all project's services 
             from external world, except ports which are intentionally forwarded for 
-            external access. Which network to use is define for each service above 
+            external access. Which network to use is defined for each service above 
             and how network has been setup is shown below: <br><br>
             
             <pre>
