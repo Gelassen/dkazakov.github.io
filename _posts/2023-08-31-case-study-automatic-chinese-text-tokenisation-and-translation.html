@@ -1,0 +1,89 @@
+---
+layout: post
+title: 'Case study: automatic Chinese text word segmentation and translation'
+date: '2023-08-20'
+author: Gelassen
+tags: 
+modified_time: '2023-08-31'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>Executive summary</h3>
+        <p>
+            Past two weeks I have been working on new feature for my 
+            Words-In-Memory project (WIM) which exploits Android ML kit and some 
+            extra ML solutions. <br><br>
+
+            Words-In-Memory is my personal project which I developed more than 
+            half year ago to help me learn Chinese. It is simply a vocabulary. 
+            Now I want my app to automatically split a new sentence I just have 
+            entered into separate words and give translation for each of them. <br><br>
+
+            This two weeks of works ended on a stage where I was exploring 
+            chaquopy options to integrate my python script with classifiers into 
+            my project. The work is not finished yet, but it might be interesting 
+            for my readers to know about milestones results.
+
+        </p>
+        <h3>Task decomposition</h3>
+        <p>
+            The sentence user entered into the app should be translated on English. 
+            But before that, a text should be split into sentences and sentences 
+            into words. For Russian or English it is a trivial task, but for 
+            languages as Chinese which doesn't have spaces and where each 
+            combination of new symbols might have a new meaning it become an another 
+            challenge. <br><br>
+
+            The task is split into two sub-tasks: Chinese word segmentation and 
+            automatic Chinese-to-English translation.
+        </p>
+        <h3>Android ML kit</h3>
+        <p>
+            Google quite a while ago introduced a ML kit on Android which allows to 
+            utilise machine learning on device for common ML tasks. Translation is 
+            one of them and out-of-the-box I was able to translate Chinese text to 
+            English from screenshot. It is interesting and in some way solves my 1 
+            from 2 parts of my task, but I need to go further. <br><br>
+
+            Further research shown for a passed 5 years for NLP tasks a current 
+            leader are BERT and BERT-based models. Pre-trained models are available 
+            for public usage and some of them even support Chinese. <br><br>
+
+            Android ML kit framework allows to run custom models on the device. 
+            Before that they should be converted into tensorflow lite format which 
+            is optimised version of Tensorflow on mobile devices. Another popular 
+            format is Pytorch and conversion from Pytorch -> Tensorflow -> 
+            Tensorflow lite is also possible. However, this conversions have 
+            limitation on set of framework operators you can use to train this model 
+            which might be a blocker for a such conversion. Also during this 
+            conversion you might lose pre-trained weights, but this topic requires 
+            further discovery. <br><br>
+
+            During time I allocated for this task I hadn't done this with tensorflow 
+            or pytorch models on Android due several reasons. I returned back to 
+            Python notebooks to just solve my word tokenizer and classification task 
+            and I done this by using combination of several classifiers from 
+            ckip-transformers. <br><br>
+            
+            Now I have a working classifier, but it is in format which doesn't work 
+            on Android. To make it work I need to find out to port into supported 
+            format or integrate python script into kotlin/java Android app.
+        </p>
+        <h3>Chaquopy: integrate your python code into native Android app</h3>
+        <p>
+            Further research shown just a few products offers and chaquopy looks the most promising one.
+        </p>
+        <h3>Backend API on Python to serve your ML model</h3>
+        <p>
+
+
+        </p>
+        <p>
+            More works on ML: <br>
+            <a href="https://gelassen.github.io/blog/2020/12/05/housing-price-prediction.html">House price prediction</a>
+        </p>
+    </body>
+</html>
