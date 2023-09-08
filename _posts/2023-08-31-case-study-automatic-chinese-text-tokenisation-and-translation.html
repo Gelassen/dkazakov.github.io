@@ -18,38 +18,36 @@ modified_time: '2023-09-8'
             words, translate each word on English, extend with Pinyin, cleanup final 
             dataset and add to the storage for the later usage. Feature has been 
             added into mobile app, but has been turned off, because I don't have 
-            enough resource to pay for hosting or allocate some of my machine for 
+            enough resource to pay for hosting or allocate some of my machines for 
             24/7 server work. <br><br>
 
             Words-In-Memory is my personal project which I developed almost an
             year ago to help me learn Chinese. It is simply a vocabulary. 
             Active usage shown a need to make app automatically split a new 
-            sentence a user just has entered into separate words and give 
+            sentence has been entered by user into separate words and to give 
             translation for each of them. <br><br>
 
             During R&D phase several options has been considered: <br><br>
 
-            - ML kit from Google to automatically recognize a separate Chinese 
+            1. ML kit from Google to automatically recognize a separate Chinese 
             words <br>
-            - BERT-based model as leader on passed 5 years for NLP tasks <br>
-            - different options with Chaquopy as a leader to integrate python 
+            2. BERT-based model as leader on passed 5 years for NLP tasks <br>
+            3. different options, where Chaquopy is a leader, to integrate python 
             based models into Android native app <br> 
-            - options to serve python based model over REST API <br> <br>
-
-            - translation over Google Translate Android app which is common on 
+            4. options to serve python based model over REST API <br> 
+            5. translation over Google Translate Android app which is common on 
             mobile devices to final translation from Chinese to English<br>
-            - cloud based Google translation Api <br>   
-            - ML kit translation model on the device <br>
-            - open source solution for extending origin text with Pinyin 
+            6. cloud based Google translation API <br>   
+            7. ML kit translation model on the device <br>
+            8. open source solution for extending origin text with Pinyin 
             (Chinese hieroglyphics are called Hanzi, its transliteration is 
             called Pinyin) <br><br>
 
             Final solution includes a backend on Python which utilizes a 
             tokenizer to recognize separate Chinese words in text and a 
             mobile client which under the hood uses a ML kit for translation 
-            each word into English into background. Also with help of open 
-            source library Pinyin transliteration has been added to origin text. 
-            All is built into pipeline. <br><br>
+            each word into English in the background. Also with help of open 
+            source library Pinyin transliteration has been added to origin text. <br><br>
             
             It worth to note, any other direction like on device ML kit 
             model/tokenizer or integration over Chaquopy worth to explore 
@@ -83,20 +81,20 @@ modified_time: '2023-09-8'
             <h4>BERT model</h4>
             <p>
                 Further research shown for a passed 5 years for NLP tasks a current 
-                leader are BERT and BERT-based models. Pre-trained models are available 
+                leaders are BERT and BERT-based models. Pre-trained models are available 
                 for public usage and some of them even support Chinese. <br><br>
 
                 Origin BERT model has a limit 512 chars as the max text length. 
                 There is a known BERT-based model which has 2048 as max text 
                 length input, for longer text some workarounds would be required, 
-                e.g. split text smaller blocks within BERT-based model allowed 
+                e.g. split text on smaller blocks within BERT-based model allowed 
                 input size (although, it might have negative impact on model 
-                inference quality as BERT model uses context around word to 
+                inference quality as a BERT model uses context around word to 
                 produce better results). <br><br>
 
                 Unfortunately, BERT model itself is not what I was need for my task. 
                 What I need is a tokenizer - neural network which does word 
-                segmentation. It is used in BERT, but just one of the layers. 
+                segmentation. It is used in BERT, but it is just one of it's layers. 
             </p>
             <h4>A few notes on how ML kit work</h4>
             <p>
@@ -105,7 +103,7 @@ modified_time: '2023-09-8'
                 is optimized version of Tensorflow on mobile devices. Another popular 
                 format is Pytorch and conversion from Pytorch -> Tensorflow -> 
                 Tensorflow lite is also possible. However, this conversions have 
-                limitation on set of framework operators you can use to train this model 
+                limitation on a set of framework operators you can use to train this model 
                 which might be a blocker for a such conversion. Also during this 
                 conversion you might lose pre-trained weights, but this topic requires 
                 further discovery. 
@@ -118,13 +116,13 @@ modified_time: '2023-09-8'
                 and I done this by using combination of several classifiers from 
                 <a href="https://ckip-transformers.readthedocs.io/en/stable/main/readme.html#git">ckip-transformers.</a> <br><br>
                 
-                Now I have a working classifier, but it is in format which doesn't work 
-                on Android. To make it work I need to find out to port into supported 
+                At that moment I got a working classifier, but it is in format which doesn't work 
+                on Android. To make it work I need to find out a way to port into supported 
                 format or integrate python script into kotlin/java Android app.
             </p>
             <h4>Chaquopy: integrate your python code into native Android app</h3>
             <p>
-                Further research shown just a few products offers and <a href="https://github.com/chaquo/chaquopy">Chaquopy</a> looks 
+                Further research shown just a few products offers this and <a href="https://github.com/chaquo/chaquopy">Chaquopy</a> looks like
                 the most promising one. <br><br>
 
                 The idea to simply port your existing Python code into native Android app 
@@ -133,8 +131,8 @@ modified_time: '2023-09-8'
                 code I found out-of-the-box it misses some packages required by my tokenizers. <br><br>
 
                 Chaquopy is an open source product, so I went into a code looking for a way 
-                to import packages I was looking for. I have found an <a href="https://github.com/chaquo/chaquopy/tree/master/server/pypi">instruction</a> 
-                and also some caveats which I might faced on this way (link). I was already 
+                to import packages I was looking for. I had found an <a href="https://github.com/chaquo/chaquopy/tree/master/server/pypi">instruction</a> 
+                and also <a href="https://github.com/chaquo/chaquopy/issues/607#issuecomment-1113378792">some caveats</a> which I might faced on this way. I was already 
                 behind a schedule and when I faced with not easily solved environment conflicts 
                 on my machine, I decided to postpone with this and switch on serving ML model 
                 via API. It was a right move, because later I will discover my tokenizer 
@@ -144,7 +142,7 @@ modified_time: '2023-09-8'
                 The is still an option to try to decrease a model (mobile BERT from Google has 
                 ~100mb memory footprint), there is still an option to try to import packages 
                 and pushed it into origin repo or into your own fork. However, all of this takes 
-                extra time which meant it are possible tasks for a future, but not for now.  
+                extra time which meant they are possible tasks for a future, but not for now.  
             </p>
             <h4>Backend API on Python to serve your ML model</h4>
             <p>
@@ -214,7 +212,25 @@ modified_time: '2023-09-8'
                 I was not familiar with nuances of work of synchronisation primitives on Python. 
                 so I left <a href="https://codereview.stackexchange.com/questions/286752/synchronisation-access-to-a-shared-class-in-python-server-with-async-await">this code for code review</a> 
                 by sharing my considerations. In case you have any constructive feedback or 
-                proposals, repository is open for pull requests.   
+                proposals, repository is open for pull requests.  <br><br>
+
+                Docker container for this will look as this: <br><br>
+
+                <pre>
+                    FROM python:3.11
+
+                    WORKDIR /deployment
+
+                    COPY ./requirements.txt /deployment/requirements.txt
+
+                    RUN pip install --no-cache-dir --upgrade -r /deployment/requirements.txt
+
+                    ENV PYTHONPATH /deployment/src
+
+                    COPY ./src /deployment/src
+
+                    CMD ["uvicorn", "src.start:app", "--host", "0.0.0.0", "--port", "80"]
+                </pre>
             </p>
         </p>
         <h3>Translation</h3>
@@ -236,18 +252,18 @@ modified_time: '2023-09-8'
                     startActivity(intent)
                 </pre> <br><br>
     
-                Unfortunately, I didn't find to do such translation in the background 
+                It is Android native way. Unfortunately, I didn't find to do such translation in the background 
                 without user involvement. May be it doesn't possible. Let me know if 
-                such options is available. For now I have to search for alternative 
+                such option is available. For now I have to search for alternative 
                 solution. 
             </p>
             <h4>Google cloud translation API</h4>
             <p>
-                Google translation API offered 500k characters per month for free 
+                Google translation API offered 500k characters per month for a free 
                 translation. However, at this moment they put a signed of cross near 
                 this offer -- usually it means it is not available anymore. I didn't 
                 succeed to contact their sales team to clarify, but the idea API could 
-                be canceled in future pushed me back to ML kit solution.
+                be canceled in the future pushed me back to ML kit solution.
             </p>
             <h4>ML kit translate</h4>
             <p>
@@ -256,7 +272,7 @@ modified_time: '2023-09-8'
                 enough for my case. The ML model is used for this has a quite small 
                 storage footprint - ~20mb. <br><br> 
 
-                Before usage the model should be downloaded on the device. I have found 
+                Before usage the model should be downloaded on the device. I have not found 
                 a way to download a model separately and put it into assets to package 
                 it into final apk. The code is: <br><br>
 
@@ -286,7 +302,7 @@ modified_time: '2023-09-8'
 
                 It was interesting to discover this translation API also uses tokenizers. 
                 Unfortunately I had not found a public API to leverage it. It would be good 
-                to have them open as well in future releases ML kit translation API. 
+                to have them open as well in future releases of ML kit translation API. 
             </p>
         </p>
         <h3>Extension with Pinyin</h3>
