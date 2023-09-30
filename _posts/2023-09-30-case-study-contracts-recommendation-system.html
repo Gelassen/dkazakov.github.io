@@ -1,0 +1,139 @@
+---
+layout: post
+title: 'Case study: contracts recommendation system'
+date: '2023-09-22'
+author: Gelassen
+tags: 
+modified_time: '2023-09-30'
+---
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h3>
+            Executive summary
+        </h3>
+        <p>
+            Work on the system has been canceled after the stage of automatic 
+            gathering data from job boards. R&D phase shown ethical issues 
+            caused by conflicts between system intent and job boards robots.txt. 
+            Meanwhile I got basic skills in web scrapping - automatically gathering 
+            tailor made dataset from public sources, - and now offer this as 
+            a service.   
+        </p>
+        <h3>
+            The idea
+        </h3>
+        <p>
+            The idea is to automatically aggregate contracts from popular job 
+            boards and suggest new contracts based on my previous feedback. <br><br>
+
+            The idea of this project belong to my former colleague and friend, 
+            he did something similar for himself years ago. It was in my backlog 
+            for a while and this week was a time to start work on this. <br><br>
+            
+            After gathering weekly/monthly database of new contracts all of them 
+            should be processed to build a feature vector for each contract. 
+            My feedback on each contract and feedback on my application would 
+            extend this feature vector by two more values. Rating score for each 
+            contract would be done by calculating Euclid distance between vectors 
+            which is translated to sense of similarity between new contracts and 
+            contracts I liked and got positive feedback from a customer. 
+        </p>
+        <h3>R&D</h3>
+        <p>
+            <h4>Web Crawlers</h4>
+            <p>
+                R&D shown several interesting solutions on the market: <br>
+                - Octoparse: almost no-code platform, did not give good results on 
+                <a href="infoline.ru">infoline.ru</a> and <a href="2gis.ru">2gis.ru</a> <br>
+                - BeatifulSoup: quick and handy libs to extract data from html pages <br>
+                - Scrapy: solid and enterprise level framework, combine crawler 
+                and scaping capabilities, but so far I have been working with it 
+                from console - do not know yet how it will behave during 
+                integration into the python server <br><br>
+
+                The code of one my crawlers looks like this: <br><br>
+                
+                <pre>
+                    class JobBoardSpider(scrapy.Spider):
+                        name = 'one-popular-job-board-spider'
+                        start_urls = [
+                            'https://<endpoint>/search/vacancy?area=1&ored_clusters=true&professional_role=96&search_period=30&text=Android&order_by=publication_time'
+                            ]
+
+                        def __init__(self):
+                            self.BASE_URL = '<endpoint>'
+                            self.JOB_SELECTOR = '.vacancy-serp-item-body'
+                            self.JOB_TITLE_SELECTOR = '.serp-item__title::text'
+                            self.JOB_COMPANY_SELECTOR = '.bloko-link_kind-tertiary::text'
+                            self.JOB_COMPANY_URL_SELECTOR = '.bloko-link_kind-tertiary::attr(href)'
+                            self.JOB_COMPENSATION_SELECTOR = '.bloko-header-section-2::text'
+                            self.NEXT_SELECTOR = '.bloko-button[data-qa="pager-next"]::attr(href)'
+
+                        def start_requests(self):
+                            for url in self.start_urls:
+                                yield scrapy.Request(url=url, 
+                                    callback=self.parse, 
+                                    headers={"User-Agent": "one-popular-job-board-crawler (+https://github.com/Gelassen/web-crawlers)"},
+                                )
+
+                        def parse(self, response):
+                            for vacancy in response.css(self.JOB_SELECTOR): 
+                                yield {
+                                    'jobTitle' : vacancy.css(self.JOB_TITLE_SELECTOR).get(),
+                                    'compensation' : ''.join(vacancy.css(self.JOB_COMPENSATION_SELECTOR).getall()),
+                                    'company' : ''.join(vacancy.css(self.JOB_COMPANY_SELECTOR).getall()),
+                                    'companyUrl' : self.BASE_URL + vacancy.css(self.JOB_COMPANY_URL_SELECTOR).get()
+                                }
+
+                            next_page = response.css(self.NEXT_SELECTOR).get()
+
+                            if next_page is not None:
+                                yield scrapy.Request(response.urljoin(next_page))
+                </pre> <br><br>
+
+                It is run from a console by this command: <br><br>
+
+                <pre>
+                    $ scrapy runspider scraper.py -o hh-scraped-results.json -s FEED_EXPORT_ENCODING=utf-8
+                </pre> <br><br>
+
+                However, if you tell your crawler to respect robots.txt, you would 
+                not get any data. Some site owners goes even further and apply 
+                variety of technics to make an automatic web scrapping more 
+                difficult and time consuming. <br><br>
+                
+                Scrapy supports many options to overcome such techniques, but that 
+                is what bring us ethical issues - do we really need this data to 
+                undermine another person will to do not automatically gather it?   
+            </p>
+            <h4>
+                Other considerations
+            </h4>
+            <p>
+                There was an idea to setup more complex ML model to build such 
+                recommendation, but after chat with my another former colleague 
+                and friend we agreed on it might be an overengineering and it 
+                is better to start with the most simple approach to solve this 
+                task. <br>
+                The choice of the right database is another interesting task: 
+                in case of full text search platform will need something like 
+                Elastic Search, but in case non normalized dataset from different 
+                job boards no-relational NoSql database like MongoDB might be 
+                required, however we are going to save calculated feature vectors 
+                and do math operations on them which bring one more constraint 
+                on db choice. <br><br>
+
+                If you don't want to harm robots.txt rules, but don't mind 
+                overexploit people from the poorest countries, you might consider 
+                to use <a href="https://www.mturk.com">Mechanical turk</a> to make 
+                this tedious routine job for you. 
+            </p>
+        </p>
+        <p>
+            Originally published on <a href="https://www.linkedin.com/posts/dmkazakov_amazon-mechanical-turk-activity-7111002093208887296-2UE3?utm_source=share&utm_medium=member_desktop">LinkedIn</a>
+        </p>
+    </body>
+</html>
