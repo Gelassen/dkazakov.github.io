@@ -1,0 +1,171 @@
+---
+layout: post
+title: 'Getting skills in penetration testing'
+date: '2023-11-06'
+author: Gelassen
+tags: 
+modified_time: '2023-11-06'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>
+            Summary
+        </h3>
+        <p>
+            Over passed two weeks I have been learning penetration testing by practice: 
+            <a href="https://www.root-me.org/">root-me.org</a> practice, 
+            <a href="https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/05-Authorization_Testing/01-Testing_Directory_Traversal_File_Include">OWASP testing guide</a>, 
+            <a href="https://portswigger.net/web-security/all-labs">Burp Suite labs</a>. <br><br>
+
+            Meanwhile, during the process of gaining skills in penetration testing 
+            I started to offer a cooperation for companies who specialized in InfoSeq 
+            and where we could complement each other to work on establishing information 
+            security of government's organizations caused by recent changes in 
+            Russian laws. <br><br>
+
+            I decided do not focus solely on government organizations, but look 
+            for notable breaches over passed year to identify popular hacker's targets 
+            to offer similar companies in this business domain to work together 
+            on the information security of their organizations.  
+        </p>
+        <h3>
+            Discovery
+        </h3>
+        <p>
+            During recent work on <a href="https://gelassen.github.io/blog/2023/10/21/case-study-information-security-of-government-organisation.html">
+            establishing information security of the government organization</a> 
+            I discovered results of penetration testing are a major criteria of 
+            organization's information security current state. <a href="https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/05-Authorization_Testing/01-Testing_Directory_Traversal_File_Include">
+            OWASP testing guide</a> should be the main reference to perform audit 
+            of an organization. <br><br>
+
+            Those, who read me often, already knew I consider the most reliable 
+            criteria of knowledge quality&completeness is doing something practical 
+            with it. In case of information security I develop my skills over  
+            resources as <a href="https://portswigger.net/web-security/all-labs">burpsuite labs</a>, 
+            <a href="https://www.root-me.org/">root-me.org</a>, battle proved 
+            platforms like <a href="https://cyberpoly.ru/">cyberpolygon</a> <br><br>  
+
+            At first stage, I go through all of this challenges one-by-one, but 
+            later I changed this approach to focus at first on the most 
+            popular attacks vectors of this year. The list is: <br><br>
+
+            <pre>
+                1. Server Security Misconfigurations (28.1%)
+                2. Cross-Site Scripting (15.5%)
+                3. Broken Access Control (14.7%)
+                4. Sensitive Data Exposure (8.4%)
+                5. Authentication and Sessions (8%)
+            </pre> <br><br>
+
+            Together with gaining skills to enter into the system I started to 
+            write-up steps which should be performed to mitigate such issues 
+            (<a href="https://github.com/Gelassen/information-security">link</a>). 
+            It was done (but the work is in progress) for personal use, for general 
+            reader I would suggest again to check the OWASP testing guide. <br><br>
+            
+            When I became more or less confided with my set recently learned 
+            techniques, I tested them close-to-realistic scenarios. There are 
+            places which offers this without hacking a real endpoint of some ltd. 
+            I ended-up so far with such general attack scenario: <br><br>
+            
+            <div>
+                1. Get basic information from the endpoint: <br> 
+
+                <pre>
+                    $ nmap -A -Pn -sC -sV 'endpoint'
+                </pre><br>
+    
+                2. Perform directory traversal to find out restricted areas which 
+                has been left open: <br>
+                
+                <pre>
+                    $ dirb 'endpoint' 'path-to-bruteforce-dictionary-on-local-filesystem'
+                </pre> <br>
+    
+                3. Investigate discovered artifacts: <br>
+    
+                <ul>
+                    <li>
+                        3a. Found admin url:
+                        <ul>
+                            <li>
+                                - in case of Base64 try to bypass it over variation in http 
+                                request method (e.g. PUT instead of POST)
+                            </li>
+                            <li>
+                                - try sql injections <pre>$ sqlmap -u 'endpoint'</pre>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        3b. Found exposed .git folder:
+                        <ul>
+                            <li>
+                                - dump the website and check history of commits for security holes in the software, e.g. 
+                                GitDumper from <a href="https://github.com/Gelassen/information-security/blob/main/README.md">GitTools</a>
+                                <pre>$ ./gitdumper.sh -h 'API endpoint'/.git dest-dir 'path-to-folder-on-local-filesystem'</pre> <br> 
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        3c. Investigate html and js source code for clues to security 
+                        holes (passwords, no public API methods, db table names, etc.) 
+                    </li>
+                    <li>
+                        3d. Go deeper with other penetration techniques
+                    </li>
+                </ul> <br>
+    
+                4. Based on fingerprint stage results do a search for recent vulnerabilities 
+                (and possible already published exploits) Nmap command launch and sql 
+                injections should give us information about endpoint operating system 
+                and database is used by the backend. This information might be used for 
+                search recently discovered vulnerabilities, e.g. in 
+                <a href="https://nvd.nist.gov/vuln/full-listing/2023/11">US National Vulnerability Database</a> 
+                or <a href="https://bdu.fstec.ru/vul?sort=datv">Russian's FSTEC vulnerabilities database</a>. 
+                This knowledge might be used to write own exploit to hack the 
+                system or even to use a developed one. <br><br> 
+    
+                Tools like Nessus or alternative solutions might help to automate such search. <br><br> 
+    
+                5. Focus on the post popular attack vectors <br>
+                <a href="https://owasp.org/www-project-web-security-testing-guide/stable/">OWASP testing guide</a> 
+                contains many vectors of attacks which is also updated every 
+                year. Over passed two weeks I touched only 5%-15% of this 
+                techniques and it is important to prioritize where will you put 
+                your efforts first.  That's why it might be interesting to 
+                view several InfoSeq reports to identify the most common hacks 
+                in your target region and align your threat model to them. <br><br> 
+    
+                To be continued...
+            </div>
+        </p>
+        <h3>
+            Conclusion
+        </h3>
+        <p>
+            This was done over two weeks. Besides general overview of this field 
+            described in ths publication, InfoSeq doesn't have limits there is 
+            no end - no one tell you your system 100% secure, it is always 
+            competition between sword and shield. It is similar to your own health: 
+            each of us has pathogen bacteria and viruses even if you are 
+            considered healthy, you can pass a healthcheck, but next autumn got a 
+            flu or another health issue. InfoSeq measures will help you to make 
+            sure you did everything from your side to protect yourself. <br><br>  
+            
+            The next steps should be go further over OWASP testing guide & 
+            improve skills in real-world scenarios and automate your attack steps 
+            by maximum.
+        </p>
+        <p>
+            A few related posts: <br>
+            <a href="https://gelassen.github.io/blog/2023/10/21/case-study-information-security-of-government-organisation.html">Case study: establishing information security of the government organization</a> <br>
+            <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">Broad vs Narrow specialization</a> <br>
+            <a href="https://gelassen.github.io/blog/2020/06/05/how-we-work.html">How I work</a>
+        </p>
+    </body>
+</html>
