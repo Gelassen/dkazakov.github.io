@@ -1,0 +1,127 @@
+---
+layout: draft
+title: 'Electronics tech notes, part I: getting started'
+date: '2023-12-23'
+author: Gelassen
+tags: 
+modified_time: '2023-12-23'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>
+            Intro
+        </h3>
+        <p>
+            Past month I have been diving into electronics and this publication 
+            opens a seria of notes on this topic. <br><br>
+
+            It covers repairing 'Siemens SITOP power 20' power supply and based 
+            on this explains basic foundation elements and principles of 
+            electrics and electronics. <br><br>
+
+            Disclaimer: standards which regulates electric voltage in common 
+            wires and some other things are different from region to region. 
+            In this publication I will use standards used by Russia and the 
+            rest post-Soviet countries. 
+        </p>
+        <h3>
+            First overview
+        </h3>
+        <p>
+            First overview of the power supplier didn't show any damages caused 
+            by fire or blasts. People who brought this to our labaratory claimed 
+            there were some blast, fire and smoke inside. <br><br>
+            
+            Next step was checking key elements of the power supplier on current 
+            resistance with help of a multimeter. It also didn't show any issues. <br><br>
+            
+            This power supplier has sophisticated architecture, so not everything 
+            was obvious. The next step was to draw a circuit of it. 
+        </p>
+        <h3>Power supply input and 3 phase current from a common electric plug</h3>
+        <p>
+            I started from the input. It has place for four cables - three of 
+            them represent different phases, the last one is a neutral.
+            
+            <h4>Why do we get 3 phase AC current?</h4>
+            <p>
+                Physics behind electricity transmission makes passing DC current 
+                on long distances unprofitable due big losses on hiting. AC current 
+                has been using instead. <br><br>
+
+                After some period of experimentations engineers worldwide came 
+                to the concept of three phase electricity. It has several 
+                advantages, where the most relevant for my aims is it makes 
+                DC current afterwards more smooth (do you notice short gaps 
+                between periods on the image below?) <br><br>
+
+                <p>
+                    <img src="/blog/assets/images/2023-12-23/3phase-AC-current.jpg"/>
+                </p> <br><br>
+
+            </p>
+
+            <h4>How does it work?</h4>
+            <p>
+                Three phase AC power source transmit high voltage current over 
+                wires. Near end user there is a transformer which converts high 
+                voltage current to a specific voltage current required by end 
+                user. For apartments it is 220V/280V. This voltage you can get 
+                from a plug in your apartment. 
+            </p>
+            
+            <h4>Physics behind current and electricity in general</h4>
+            <p></p>
+        </p>
+        <h3>Capacitors: stabilize current</h3>
+        <p></p>
+        <h3>Thermistors: the first line of protection</h3>
+        <p></p>
+        <h3>Varistors: the second line of protection</h3>
+        <p></p>
+        <h3>Diode bridge or 3 phase Larionov's rectifier: rectify current</h3>
+        <p></p>
+        <h3>Filter</h3>
+        <p></p>
+        <h3>Arrestor or gas tube charger: the third line of protection</h3>
+        <p></p>
+        <h3>There is no full gurantee to prevent your electronics break down due voltage jumps</h3>
+        <p>
+            As you see the first overview doesn't show any visible damage to the 
+            power supply. The next step is to check with help of multimeter a 
+            resistance between each key element of the circuit - it will show 
+            an element is working. However such checks have shown all elements 
+            of this multilines protection from voltages jumps are all fine, 
+            they are working. It means they didn't help to protect the power 
+            supply from brekage in this specific case.  
+        </p>
+        <h3>Induction coil: increase current</h3>
+        <p></p>
+        <h3>Capacitors one-by-one: increase voltage to 800V</h3>
+        <p></p>
+        <h3>Capacitors in parallel</h3>
+        <p>
+        </p>
+        <h3>Transformer: convert high current to a required current</h3>
+        <p>
+            <h4>Why do we need it?</h4>
+            <p></p>
+            <h4>How it works?</h4>
+            <p></p>
+        </p>
+        <h3>Transistor: open or close different segments of circuit</h3>
+        <p>
+        </p>
+        <h3>Combined transistors</h3>
+        <p></p>
+        <h3>Pair of diodes</h3>
+        <p>
+            They looks as a transistor, but actually they are different element 
+            and they have to be tested differently. It is important to check 
+            each element specification  
+        </p>
+    </body>
+</html>
