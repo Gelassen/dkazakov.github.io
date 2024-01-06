@@ -1,11 +1,11 @@
-<!-- ---
-layout: draft
+---
+layout: post
 title: 'Electronics tech notes, part I: getting started'
 date: '2023-12-23'
 author: Gelassen
 tags: 
-modified_time: '2023-12-23'
---- -->
+modified_time: '2023-12-25'
+---
 <html>
     <head>
         <link rel="stylesheet" href=".css/general.css">
@@ -32,12 +32,20 @@ modified_time: '2023-12-23'
         </h3>
         <p>
             First overview of the power supplier didn't show any damages caused 
-            by fire or blasts. People who brought this to our labaratory claimed 
+            by fire or blasts. People who brought this to our laboratory claimed 
             there were some blast, fire and smoke inside. <br><br>
+
+            <p>
+                <img src="/blog/assets/images/2023-12-23/siemens-sitop-power-bottom.png"/>
+            </p> <br><br>
             
             Next step was checking key elements of the power supplier on current 
             resistance with help of a multimeter. It also didn't show any issues. <br><br>
             
+            <p>
+                <img src="/blog/assets/images/2023-12-23/siemens-sitop-power-top.png"/>
+            </p> <br><br>
+
             This power supplier has sophisticated architecture, so not everything 
             was obvious. The next step was to draw a circuit of it. 
         </p>
@@ -49,7 +57,7 @@ modified_time: '2023-12-23'
             <h4>Why do we get 3 phase AC current?</h4>
             <p>
                 Physics behind electricity transmission makes passing DC current 
-                on long distances unprofitable due big losses on hiting. AC current 
+                on long distances unprofitable due big losses on hitting. AC current 
                 has been using instead. <br><br>
 
                 After some period of experimentations engineers worldwide came 
@@ -74,12 +82,50 @@ modified_time: '2023-12-23'
             </p>
             
             <h4>Physics behind current and electricity in general</h4>
-            <p></p>
+            <p>
+                Electricity is caused by movement of 'free' electrons and electron 
+                holes. By electron hole implies lack of electron which should be 
+                at that place. The absence of an electron behave itself in 
+                current as a particle. This together with due to the 
+                concentration of electrons and the concentration of their absence 
+                have impact on the charge, the term 'electronic hole' is used. <br><br>
+
+                Electrons (n) and electronic holes (p) during movement in the 
+                conductor which is called p-n junction. <br><br>
+
+                Concentration of electrons or of their holes creates a charge, 
+                charge create a voltage which may produce current. <br><br>
+            </p>
         </p>
         <h3>Capacitors: stabilize current</h3>
-        <p></p>
+        <p>
+            Capacitors are often used to stabilize a current. Either by spike 
+            at current's source or due spike in circuits, e.g. voltage drop when 
+            transistor just has been opened, current within circuit will 
+            fluctuate, which will have negative impact on stable work of the 
+            device. Capacitors <a href="https://electronics.stackexchange.com/a/83929/356145">are used to</a> solve this issue. <br><br>
+            
+            <p>
+                <img src="/blog/assets/images/2023-12-23/capacitor-with-scheme.png"/>
+            </p> <br><br>
+            
+            Capacitors are not traced by multimeter. Multimeter might show 
+            at once a resistance caused by some potential still charged by a 
+            capacitor, but in general it should show anything. If a capacitor 
+            is traced, it is too big leakage and should be replaced. 
+        </p>
         <h3>Thermistors: the first line of protection</h3>
-        <p></p>
+        <p>
+            Thermistors are elements which start to provide current when 
+            temperature of element has reached some threshold. In this 
+            circuit they are used as a first line of the protection. They are 
+            connected in parallel, if the high voltage current comes over input, 
+            thermistor get shorted together with all circuit. Thermistor become 
+            broken, but the rest of power supplier and a device it is connected 
+            to will be safe <br><br>
+            
+            // TODO add an image
+        </p>
         <h3>Varistors: the second line of protection</h3>
         <p></p>
         <h3>Diode bridge or 3 phase Larionov's rectifier: rectify current</h3>
@@ -88,7 +134,7 @@ modified_time: '2023-12-23'
         <p></p>
         <h3>Arrestor or gas tube charger: the third line of protection</h3>
         <p></p>
-        <h3>There is no full gurantee to prevent your electronics break down due voltage jumps</h3>
+        <h3>There is no full guarantee to prevent your electronics break down due voltage jumps</h3>
         <p>
             As you see the first overview doesn't show any visible damage to the 
             power supply. The next step is to check with help of multimeter a 
@@ -96,7 +142,7 @@ modified_time: '2023-12-23'
             an element is working. However such checks have shown all elements 
             of this multilines protection from voltages jumps are all fine, 
             they are working. It means they didn't help to protect the power 
-            supply from brekage in this specific case.  
+            supply from breakage in this specific case.  
         </p>
         <h3>Induction coil: increase current</h3>
         <p></p>
