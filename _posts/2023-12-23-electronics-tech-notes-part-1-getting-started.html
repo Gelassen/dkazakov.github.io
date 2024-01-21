@@ -1,10 +1,10 @@
 ---
 layout: post
 title: 'Electronics tech notes, part I: getting started'
-date: '2023-12-23'
+date: '2024-01-21'
 author: Gelassen
 tags: 
-modified_time: '2023-12-25'
+modified_time: '2024-01-21'
 ---
 <html>
     <head>
@@ -15,7 +15,7 @@ modified_time: '2023-12-25'
             Intro
         </h3>
         <p>
-            Past month I have been diving into electronics and this publication 
+            Past two months I have been diving into electronics and this publication 
             opens a seria of notes on this topic. <br><br>
 
             It covers repairing 'Siemens SITOP power 20' power supply and based 
@@ -27,9 +27,7 @@ modified_time: '2023-12-25'
             In this publication I will use standards used by Russia and the 
             rest post-Soviet countries. 
         </p>
-        <h3>
-            First overview
-        </h3>
+        <h3>First overview</h3>
         <p>
             First overview of the power supplier didn't show any damages caused 
             by fire or blasts. People who brought this to our laboratory claimed 
@@ -116,24 +114,93 @@ modified_time: '2023-12-25'
         </p>
         <h3>Thermistors: the first line of protection</h3>
         <p>
-            Thermistors are elements which start to provide current when 
-            temperature of element has reached some threshold. In this 
-            circuit they are used as a first line of the protection. They are 
-            connected in parallel, if the high voltage current comes over input, 
-            thermistor get shorted together with all circuit. Thermistor become 
-            broken, but the rest of power supplier and a device it is connected 
-            to will be safe <br><br>
+            Thermistors are elements which increase its/resistance (decrease current through them) when 
+            temperature of element has reached some threshold. However, another 
+            type thermistors are more popular - NTC. They decrease its 
+            resistance since some threshold. They are connected in parallel. In 
+            this circuit they are used as a first line of the protection.  <br><br>
             
-            // TODO add an image
+            <p>
+                <img src="/blog/assets/images/2023-12-23/thermistor-with-scheme.png"/>
+            </p> <br><br>
+
+            Looks like they give some delay of current growth on the first 
+            launch of the power supplier to prevent high current damage the 
+            rest elements of the circuit. 
         </p>
         <h3>Varistors: the second line of protection</h3>
-        <p></p>
+        <p>
+            Varistors uses the same principle like thermistors, but if 
+            thermistors respond on change in a temperature, varistors reacts on 
+            changes in voltage. If the high voltage current comes over input, 
+            varistor get shorted. <br><br>
+            
+            It is interesting to note the first electrode 
+            of the varistor is one wire (one phase) of AC source and another 
+            electrode is connected to another wire (another phase) of AC source. 
+            When spike in electricity source appears, it will be channeled to a 
+            different wire which phase is shifted (in other words its current 
+            wave is lower and has a capacity to be risen up by extra current 
+            which came by another wire). Such spikes are expected to be extremely 
+            short and in such cases it will work (and energy would not be wasted 
+            as it might be if a varistor will be shorted to the ground) 
+        </p>
         <h3>Diode bridge or 3 phase Larionov's rectifier: rectify current</h3>
-        <p></p>
+        <p>
+            Diode bridge is used to rectify current. You noticed your power 
+            suppliers are connected to AC's source, but most of our devices 
+            requires DC. Diode bridge is what is usually used to convert 
+            AC to DC.  <br><br>  
+
+            <p>
+                <img src="/blog/assets/images/2023-12-23/diode-bridge-eng.gif"/>
+            </p> <br><br>
+
+            This gif shows how does it work. Each semiconductor chain is either 
+            open on a high part of current's wave or on a low part of the wave 
+            which gives a stable current as an output. <br><br>
+
+            Because of AC is usually supplied by 3-phase scheme, instead of 
+            diode bridge Larionov's rectifier is used. It has connections for 
+            all three wires of AC input. <br><br>
+            
+            <p>
+                <img src="/blog/assets/images/2023-12-23/larionov-3phase-bridge-rectifier.svg.png"/>
+            </p> <br><br>
+            
+        </p>
         <h3>Filter</h3>
-        <p></p>
-        <h3>Arrestor or gas tube charger: the third line of protection</h3>
-        <p></p>
+        <p>
+            After capacitors, first two lines of protection and bridge the next two 
+            elements on circuit are filters. At the first glance they look as 
+            a transformer, but a transformer either has at least two windings or 
+            two input and two output pins. <br><br>
+
+            Filters are used to clear out some frequency range from a signal or 
+            from a current at this case. The type (ferrite or iron )of the core 
+            in each of this two filters is different and has a limit on how big 
+            frequency it is possible to pass through. <br><br>
+        </p>
+        <h3>Arrestor: the third line of protection</h3>
+        <p>
+            Arrestor is a specific variation of a gas tube charger. This is two 
+            electrodes in a short distance between each other in a box full of 
+            an air or a special gas. When a current reaches specific threshold 
+            electricity start to go through the arrestor. Arrestors are used 
+            to cope extra voltage due its spike in circuit. In this scheme it 
+            is a 3rd line of protection. <br><br> 
+
+            Arrestor's one electrode should be grounded which gave me an idea 
+            they are bipolar, but actually it is not necessary, however 
+            polarity of a current is important. EPCOS manufacturer produces 
+            arrestors for positive current (in red box) and negative current 
+            (in blue box). In the case of this circuit instead of ground the 
+            2nd electrode goes to a plus of a capacitor.<br><br>
+ 
+            In this circuit it is connected in parallel which means they become 
+            enabled only in voltage spikes, at the rest of work they do not 
+            participate in current flow.   
+        </p>
         <h3>There is no full guarantee to prevent your electronics break down due voltage jumps</h3>
         <p>
             As you see the first overview doesn't show any visible damage to the 
@@ -145,29 +212,181 @@ modified_time: '2023-12-25'
             supply from breakage in this specific case.  
         </p>
         <h3>Induction coil: increase current</h3>
-        <p></p>
+        <p>
+            Main current after two filters goes through suppressors to a 
+            induction coil. Induction coil increases current. 
+        </p>
         <h3>Capacitors one-by-one: increase voltage to 800V</h3>
-        <p></p>
+        <p>
+            Capacitors connected one-by-one increase total voltage in circuit. 
+            Also they serve as a reservoir for an energy, because connected 
+            device might drastically increase its demand in energy in a short 
+            period of time, but the power supplier without such capacitors is 
+            not able to supply it. It is also interesting to note capacitors's 
+            role as a bypass filter. <br><br>
+
+            This ones are large and able to filter high spikes in current, but 
+            due its physical characteristics have their own induction and ESR, 
+            which might be an issue in some use cases.  
+            https://electronics.stackexchange.com/questions/83892/how-to-select-an-appropriate-capacitor-for-input-voltage-stabilization
+        </p>
         <h3>Capacitors in parallel</h3>
         <p>
+            Because of big capacitors are targeted to filter large noise, they 
+            are not good to deal with a low noise. That's why smaller capacitors 
+            are usually set up in parallel to filter the rest range of noises. <br><br>
+            
+            Often they are also done from a different material like ceramic 
+            which has insignificant induction and the smallest ESR which is 
+            perfect for final endpoint which consumes the energy. <br><br>
+            
+            It is also worth to note about 'decoupling' nature of a capacitor. 
+            Because of own resistances and inductions in circuit together with 
+            some fractions of noises a plain circuit unable to supply a pure 
+            current to sensitive elements like chips. A  capacitors put down 
+            near the chip solves this issue  
         </p>
         <h3>Transformer: convert high current to a required current</h3>
         <p>
+            <p>
+                <img src="/blog/assets/images/2023-12-23/transformer-with-scheme.png"/>
+            </p> <br><br>
+
             <h4>Why do we need it?</h4>
-            <p></p>
+            <p>
+                Power suppliers are not only rectify current (AC to DC conversion), 
+                but also convert voltage and current power from input values to 
+                values required by device they are used for. Transformer does this.
+            </p>
             <h4>How it works?</h4>
-            <p></p>
+            <p>
+                Movement of charged particles creates magnetic field, changes 
+                in the magnetic field produces inductive current. If you wind 
+                wire around a conductive core, where which end you connect to 
+                a plus of a current source and another end connect to a minus of 
+                the current source, changes in polarity of current will produce 
+                changes in the magnetic field. This alternating magnetic field 
+                will produce a current in the conductive core around winding. <br><br>
+                
+                The conductive core is circled on itself and has another wire 
+                is winded no another segment of it. Using the same principle 
+                electricity produced by current on the 1st winding collected by 
+                the 2nd winding. <br><br>
+
+                When you change thickness of wire and number of wire wrapping 
+                circles, you increase or decrease current it goes through this. 
+                That's a point of a transformer: get highest voltage as an input 
+                and over this two windings convert to a current of a lower 
+                voltage. With voltage of the current we change the power of the 
+                current too.
+            </p>
+            <h4>Use case</h4>
+            <p>
+                This circuit has a couple of transformers. I am not sure about 
+                intent of the first one, but the second one is used for 
+                downgrade current. <br><br>
+
+                It is interesting to note power suppliers design is intended to 
+                separate parts of the circuit under the high voltage from 
+                parts of the circuit under low voltage. Just one more level of 
+                protection.   
+            </p>
         </p>
         <h3>Transistor: open or close different segments of circuit</h3>
         <p>
+            <p>
+                <img src="/blog/assets/images/2023-12-23/transistor-on-scheme.png"/>
+            </p> <br><br>
+
+            The power of transistors is ability to conduct or stop current 
+            through them by sending small electricity signal to it. Worth to 
+            note the power current also varies and it is regulated by the same 
+            signal. <br><br>
+
+            Transistors are made from conductive materials which have different 
+            type of conductance - positive (p) or negative (n). By putting 
+            together two types of conductive material - positive and negative - 
+            they become semi isolated from each other, they still able to 
+            conduct current, but under special conditions. That's why they are 
+            called semiconductors. <br><br>
+            
+            Such condition is an electricity signal which comes on a 3rd 
+            electrode of a transistor which is called base or gate. This signal 
+            opens a transistors to conduct current and varies the power of it. 
+            <br><br>
+            
+            The most commonly used transistors are which exploits three p-n 
+            transmissions - n-p-n or p-n-p, - where the left part is an input 
+            (anode), the right part is an output (cathode) and the part in the 
+            middle is a base or gate. p gate is controlled by positive current, 
+            n gate is controlled by a negative current. <br><br>
+            
+            The complete theory behind its work is very interesting and several 
+            american physicists got a Nobel prize for its explanation in the 
+            beginning of 50-x in XX century, so you might continue learn more 
+            by read their papers or a specialized literature.
         </p>
-        <h3>Combined transistors</h3>
-        <p></p>
+        <h3>Darlington transistors</h3>
+        <p>
+            This circuits has one here. It seems it is used for amplifying current. 
+            This publication on <a href="https://electronics.stackexchange.com/a/208353/356145">electronics.stackexchange.com</a> 
+            has good explanation of how it works. 
+        </p>
         <h3>Pair of diodes</h3>
         <p>
             They looks as a transistor, but actually they are different element 
             and they have to be tested differently. It is important to check 
-            each element specification  
+            each element specification. 
+        </p>
+        <h3>Pulse-width modulation (PWM) controller</h3>
+        <p>
+            It is a key element of modern power suppliers. It is used for  
+            increase efficiency of its work. I am not ready yet to explain to 
+            you how it works, but this element is what had been broken in this 
+            power supplier. <br><br>
+
+            After I had checked a datasheet on this element, I got an understanding 
+            what it expects as a input and what we should expect on the output. 
+            Such black-box testing gaves me result - this microscheme doesn't 
+            work as an expected. I request a new one and after replacement we 
+            will see if power supplier will get back to work.  
+        </p>
+        <h3>Optocoupler</h3>
+        <p>
+            This power supplier has option to work in different modes. Switching 
+            between this modes is done with help of a couple of optocouplers. 
+            I am amazed by this components and here is why. <br><br>
+
+            They have inside a light emission element and a photo diode which 
+            is activated by light. By putting different light elements and 
+            photo diodes you can separate two different circuits under 
+            different (!) voltages by non-galvanic (!) way. Why is it important? <br><br>
+            
+            It creates an extra level or protection between different parts of 
+            the circuit. Those of you who have background in software 
+            engineering know how important to encapsulate different pieces of logic 
+            and how bad is when <a href="https://en.wikipedia.org/wiki/Leaky_abstraction">an abstraction leaks</a>. 
+            If such issues arises on the software level, you can imagine what 
+            kind of issues might appear on the hardware level. Optocouplers are 
+            one extra way to protect you from them.
+        </p>
+        <h3>Conclusion</h3>
+        <p>
+            At least one cause of power supplier's breakage has been found. 
+            Will new PWD controller fix the issue or not will be clear when 
+            ordered component will be delivered and installed. <br><br>
+
+            Repairing this power supplier gave me a lot of new knowledge 
+            regarding electronics and how power suppliers works in general: 
+            from AC sources to capacitors to smooth a current -> from capacitors 
+            to a bridge to rectify/convert AC to DC -> somewhere in the middle 
+            thermistors and varistors are connected in parallel as extra level 
+            of protection -> from bridge to a couple of filters to clear current 
+            from unrequired frequencies/noises -> through inductive coil to 
+            paired capacitors of different type and size to amplify the voltage 
+            and filter different types of noises -> from capacitors to a 
+            transformer to eventual convert current to a required power and 
+            voltage     
         </p>
     </body>
 </html>
