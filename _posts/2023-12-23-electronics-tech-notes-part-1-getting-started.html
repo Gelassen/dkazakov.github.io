@@ -29,7 +29,7 @@ modified_time: '2024-01-21'
         </p>
         <h3>First overview</h3>
         <p>
-            First overview of the power supplier didn't show any damages caused 
+            First overview of the power supply didn't show any damages caused 
             by fire or blasts. People who brought this to our laboratory claimed 
             there were some blast, fire and smoke inside. <br><br>
 
@@ -37,14 +37,14 @@ modified_time: '2024-01-21'
                 <img src="/blog/assets/images/2023-12-23/siemens-sitop-power-bottom.png" width="100%"/>
             </p> <br><br>
             
-            Next step was checking key elements of the power supplier on current 
+            Next step was checking key elements of the power supply on current 
             resistance with help of a multimeter. It also didn't show any issues. <br><br>
             
             <p align="center">
                 <img src="/blog/assets/images/2023-12-23/siemens-sitop-power-top.png" width="100%"/>
             </p> <br><br>
 
-            This power supplier has sophisticated architecture, so not everything 
+            This power supply has sophisticated architecture, so not everything 
             was obvious. The next step was to draw a circuit of it. 
         </p>
         <h3>Power supply input and 3 phase current from a common electric plug</h3>
@@ -125,7 +125,7 @@ modified_time: '2024-01-21'
             </p> <br><br>
 
             Looks like they give some delay of current growth on the first 
-            launch of the power supplier to prevent high current damage the 
+            launch of the power supply to prevent high current damage the 
             rest elements of the circuit. 
         </p>
         <h3>Varistors: the second line of protection</h3>
@@ -152,7 +152,7 @@ modified_time: '2024-01-21'
         <h3>Diode bridge or 3 phase Larionov's rectifier: rectify current</h3>
         <p>
             Diode bridge is used to rectify current. You noticed your power 
-            suppliers are connected to AC's source, but most of our devices 
+            supplies are connected to AC's source, but most of our devices 
             requires DC. Diode bridge is what is usually used to convert 
             AC to DC.  <br><br>  
 
@@ -224,12 +224,12 @@ modified_time: '2024-01-21'
         <p>
             Capacitors connected one-by-one increase total voltage in circuit. 
             Also they serve as a reservoir for an energy, because connected 
-            device might drastically increase its demand in energy in a short 
-            period of time, but the power supplier without such capacitors is 
-            not able to supply it. It is also interesting to note capacitors's 
+            device might drastically increase its demand in an energy in a short 
+            period of time, but the power supply without such capacitors is 
+            not able to provide it. It is also interesting to note capacitors's 
             role as a bypass filter. <br><br>
 
-            This ones are large and able to filter high spikes in current, but 
+            This ones are large and able to filter high spikes in a current, but 
             due its physical characteristics have their own induction and ESR, 
             which might be an issue in some use cases. 
             <a href="https://electronics.stackexchange.com/questions/83892/how-to-select-an-appropriate-capacitor-for-input-voltage-stabilization">How to select an appropriate capacitor for input voltage stabilization</a> 
@@ -259,7 +259,7 @@ modified_time: '2024-01-21'
 
             <h4>Why do we need it?</h4>
             <p>
-                Power suppliers are not only rectify current (AC to DC conversion), 
+                Power supplies are not only rectify current (AC to DC conversion), 
                 but also convert voltage and current power from input values to 
                 values required by device they are used for. Transformer does this.
             </p>
@@ -291,7 +291,7 @@ modified_time: '2024-01-21'
                 intent of the first one, but the second one is used for 
                 downgrade current. <br><br>
 
-                It is interesting to note power suppliers design is intended to 
+                It is interesting to note power supplies design is intended to 
                 separate parts of the circuit under the high voltage from 
                 parts of the circuit under low voltage. Just one more level of 
                 protection.   
@@ -345,20 +345,20 @@ modified_time: '2024-01-21'
         </p>
         <h3>Pulse-width modulation (PWM) controller</h3>
         <p>
-            It is a key element of modern power suppliers. It is used for  
+            It is a key element of modern power supplies. It is used for  
             increase efficiency of its work. I am not ready yet to explain to 
             you how it works, but this element is what had been broken in this 
-            power supplier. <br><br>
+            power supply. <br><br>
 
             After I had checked a datasheet on this element, I got an understanding 
             what it expects as a input and what we should expect on the output. 
             Such black-box testing gave me result - this microscheme doesn't 
             work as an expected. I request a new one and after replacement we 
-            will see if power supplier will get back to work.  
+            will see if power supply will get back to work.  
         </p>
         <h3>Optocoupler</h3>
         <p>
-            This power supplier has option to work in different modes. Switching 
+            This power supply has option to work in different modes. Switching 
             between this modes is done with help of a couple of optocouplers. 
             I am amazed by this components and here is why. <br><br>
 
@@ -377,12 +377,12 @@ modified_time: '2024-01-21'
         </p>
         <h3>Conclusion</h3>
         <p>
-            At least one cause of power supplier's breakage has been found. 
+            At least one cause of power supply's breakage has been found. 
             Will new PWD controller fix the issue or not will be clear when 
             ordered component will be delivered and installed. <br><br>
 
-            Repairing this power supplier gave me a lot of new knowledge 
-            regarding electronics and how power suppliers works in general: 
+            Repairing this power supply gave me a lot of new knowledge 
+            regarding electronics and how power supplies works in general: 
             from AC sources to capacitors to smooth a current -> from capacitors 
             to a bridge to rectify/convert AC to DC -> somewhere in the middle 
             thermistors and varistors are connected in parallel as extra level 
