@@ -4,7 +4,7 @@ title: 'Electronics tech notes, part I: getting started'
 date: '2024-01-21'
 author: Gelassen
 tags: 
-modified_time: '2024-01-21'
+modified_time: '2024-02-3'
 ---
 <html>
     <head>
@@ -126,7 +126,7 @@ modified_time: '2024-01-21'
 
             Looks like they give some delay of current growth on the first 
             launch of the power supply to prevent high current damage the 
-            rest elements of the circuit. 
+            rest elements of the circuit (in this case - capacitors). 
         </p>
         <h3>Varistors: the second line of protection</h3>
         <p>
@@ -147,7 +147,10 @@ modified_time: '2024-01-21'
             wave is lower and has a capacity to be risen up by extra current 
             which came by another wire). Such spikes are expected to be extremely 
             short and in such cases it will work (and energy would not be wasted 
-            as it might be if a varistor will be shorted to the ground) 
+            as it might be if a varistor will be shorted to the ground) <br><br>
+
+            Varistors and thermistors should not be traced - provide current 
+            between their electrodes. If they do, it means they are broken.
         </p>
         <h3>Diode bridge or 3 phase Larionov's rectifier: rectify current</h3>
         <p>
@@ -192,7 +195,7 @@ modified_time: '2024-01-21'
             electrodes in a short distance between each other in a box full of 
             an air or a special gas. When a current reaches specific threshold 
             electricity start to go through the arrestor. Arrestors are used 
-            to cope extra voltage due its spike in circuit. In this scheme it 
+            to cope extra voltage due its spike in a circuit. In this scheme it 
             is a 3rd line of protection. <br><br> 
 
             <p align="center">
@@ -208,7 +211,10 @@ modified_time: '2024-01-21'
  
             In this circuit it is connected in parallel which means they become 
             enabled only in voltage spikes, at the rest of work they do not 
-            participate in current flow.   
+            participate in current flow. <br><br>
+            
+            Arrestors also should not be traced. If they do, it means they are 
+            broken.
         </p>
         <h3>There is no full guarantee to prevent your electronics break down due voltage jumps</h3>
         <p>
@@ -413,7 +419,12 @@ modified_time: '2024-01-21'
             paired capacitors of different type and size to amplify the voltage 
             and filter different types of noises -> from capacitors to a 
             transformer to eventual convert current to a required power and 
-            voltage     
+            voltage. <br><br>
+            
+            Circuit might not be traced in the normal mode, but could be traced 
+            in the diode mode, because some transistor opens the gate and start 
+            to provide current. It brings extra challenges in checking both 
+            a circuit and an electronic component on the circuit. 
         </p>
         <p>
             A few related publications: <br><br>
