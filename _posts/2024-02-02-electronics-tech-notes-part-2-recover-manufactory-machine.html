@@ -4,7 +4,7 @@ title: 'Electronics tech notes, part II: recover manufactory machine'
 date: '2024-02-2'
 author: Gelassen
 tags: 
-modified_time: '2024-02-2'
+modified_time: '2024-02-5'
 ---
 <html>
     <head>
@@ -56,7 +56,7 @@ modified_time: '2024-02-2'
             This motherboard consists from 40 identical microschemes КР155ПР7 or 
             west analog 74185 (actually, 74185 was first, Texas Instruments 
             become a trend setter and it would be right to call КР155 seria an 
-            analog). What it does is convert a binary number from input 
+            analog). What it does is converting a binary number from input 
             to a binary-decimal number on the output. It means we can pass a 
             binary number on the input of the microscheme and check does it have 
             a valid number on the output. This microscheme support 32 possible 
@@ -69,6 +69,17 @@ modified_time: '2024-02-2'
             Another way recommended by my colleague is to trace signal between 
             pins of each microscheme - if they conduct current between each 
             other, likely microscheme is broken.
+        </p>
+        <h3>Motherboard's coordinate system</h3>
+        <p>
+            This 40 microschemes are positioned in matrix where we have a scale 
+            from A to L at an one side and from 1 to 4 at the another side. <br><br>
+            
+            Input pins are split one two panel. The right one has prefix 'A', 
+            the left one goes without prefix. <br><br>
+
+            Even numbers of pins goes from one side of the motherboard, odd 
+            numbers goes on the another side of the motherboad.
         </p>
         <h3>КР155ПР7 general overview</h3>
         <p>
