@@ -4,7 +4,7 @@ title: 'Electronics tech notes part III: repairing popular household appliances'
 date: '2024-03-23'
 author: Gelassen
 tags: 
-modified_time: '2024-03-23'
+modified_time: '2024-03-24'
 ---
 <html>
     <head>
@@ -31,7 +31,7 @@ modified_time: '2024-03-23'
             we have to focus on RoI when do sales of our products or services, 
             <a href="https://gelassen.github.io/blog/2023/11/22/why-do-you-need-to-setup-ssdlc.html">another publication</a> 
             shown how much business is ready to pay to mitigate potential 
-            losses caused by breach in their information security. The same 
+            losses caused by a breach in their information security. The same 
             approach is relevant here, the cost of the service is ~10%-20% of 
             the cost of a new product, except relatively cheap devices which 
             diagnostics and repair work cost nearly the same as the cost of a 
@@ -45,7 +45,7 @@ modified_time: '2024-03-23'
                 <p>
                     <p align="center">
                         <img src="/blog/assets/images/2024-03-23/microwave-oven-design.jpeg" width="25%" height="25%"/>
-                    </p> 
+                    </p> <br><br>
 
                     The image above shows a simplified design of a microwave oven. 
                     It has a big capacitor to provide stable current and smooth 
@@ -74,13 +74,13 @@ modified_time: '2024-03-23'
                     
                     The issue was in one of the switches, you might see them as 
                     keys on the simplified circuit scheme above. Each oven has 
-                    several of them (2 or 3) and they I used to open the 
+                    several of them (2 or 3) and they are used to open the 
                     electrical circuit if you open a door to prevent dangerous 
                     magnetron raditation into you. <br><br>
 
                     <p align="center">
                         <img src="/blog/assets/images/2024-03-23/microwave-oven-switches.jpeg" width="25%" height="25%"/>
-                    </p> 
+                    </p> <br><br>
 
                     The only one switch didn't work as it should be, but all 
                     three were replaced to make sure a client would not bring 
@@ -114,19 +114,60 @@ modified_time: '2024-03-23'
             <h2>Juicer</h2>
             <p>
                 <h3>How does it work?</h3>
-                <p></p>
+                <p>
+                    The most electronic devices I has repaired so far has two 
+                    basic components -- a power board and a control board. 
+                    The power board of this device is shown below. <br><br>
+                    
+                    <p align="center">
+                        <img src="/blog/assets/images/2024-03-23/juicer-power-board.jpeg" width="25%" height="25%"/>
+                    </p> <br><br>
+
+                    This and many similar power boards works on principle
+                    described in <a href="https://gelassen.github.io/blog/2023/12/23/electronics-tech-notes-part-1-getting-started.html">this my publication</a> <br><br>
+
+                    Worth to note this juicer has a mechanical lever which is 
+                    pressed only when all parts are assembled together. In 
+                    others cases, it the circuit will be turned off.  
+                </p>
                 <h3>The issue and a solution</h3>
                 <p>
-                    <!-- замена пары резисторов, регулировавших нужное напряжение -->
+                    The client complained it stopped to work. Diagnostics 
+                    shown obvious signs of a broken resistor which regulates a 
+                    power voltage. After it was replaced device still didn't 
+                    work. Further ivestigation and tracing the circuit shown 
+                    there was another resistor which became broken. When it 
+                    had been replaced, the device starts working.    
                 </p>
             </p>
             <h2>Thermopot</h2>
             <p>
                 <h3>How does it work?</h3>
-                <p></p>
+                <p>
+                    <p align="center">
+                        <img src="/blog/assets/images/2024-03-23/thermopot.jpeg" width="25%" height="25%"/>
+                    </p> <br><br>
+
+                    The heating element, classics power and control boards, a pumping engine, a 
+                    thermosensor and a thermofuse are main components of this 
+                    device. <br><br>
+                    
+                    The power board has some elements of a control board, 
+                    I never reached the control board near a control panel, 
+                    so actually I don't have information on this wires goes from 
+                    the control board or directly from buttons on the control 
+                    panel.<br><br>
+                    
+                    The control board sends electric signals and either heating 
+                    element or a pumping engine starts work.  
+                </p>
                 <h3>The issue and a solution</h3>
                 <p>
-                    <!-- замена насоса, диода, предохранителя, термопредохранителя -->
+                    The client complained it stopped work. Diagnostics shown 
+                    flooded pumping engine, however after replacement device 
+                    still wasn't working. Further investigation shown a broken 
+                    stabilitron (Zenner's diode) and an a diode. When they had 
+                    been replaced, device starts working.  
                 </p>
             </p>
         </p>
