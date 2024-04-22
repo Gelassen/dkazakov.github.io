@@ -1,0 +1,113 @@
+---
+layout: post
+title: 'Electronics tech notes part V: assembly of automation for pressure gauge and handmade replacement of the touch panel'
+date: '2024-04-21'
+author: Gelassen
+tags: 
+modified_time: '2024-04-21'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>Executive summary</h3>
+        <p>
+            Passed three weeks I have been working on repairing electronics of 
+            household appliances. I repaired 14 items which generated ~28000 
+            rubles for a business and saved ~110 000 rubles for our clients. <br><br>
+            
+            This publication covers work on two interesting cases - custom assembly 
+            of automation for pressure gauge and replacement of the touch panel 
+            for microwave oven.
+        </p>
+        <h3>Cases</h3>
+        <p>
+            <h4>Automation for pressure gauge</h4>
+            <p>
+                <p align="center">
+                    <img src="/blog/assets/images/2024-04-21/automation-for-pressure-gauge.jpg" width="100%"/>
+                </p> <br><br>
+
+                A client had a request to build automation for his compressor 
+                instead of old one. He brought us his own components: forty years 
+                old soviet russian pressure gauge, two relays and several wires. <br><br>
+                
+                The circuit scheme is partly available on the photo above. <br><br>
+                
+                The arrow in the gauge is moved by a gas pressure in the reservoir. 
+                When it reaches a minimal pressure, it gives a first signal by breaking 
+                a current flow in the one of three wires. When it reaches the 
+                maximum pressure, it breaks the current flow in the second wire. 
+                At this stage there is no more current in the circuit and connected engine 
+                which work increases the gas pressure stops working. When 
+                decreasing pressure moves arrow to the minimal state, circuit 
+                becomes connected again, current start flow and new cycle begins. <br><br>
+                
+                This automation could be implemented by two relays -- by one 
+                relay on minimal and maximum pressure state. Pressure state in 
+                the circuit could be either shorted or disconnected, so two states 
+                for each position means four different states in total should 
+                implemented in the circuit. Relays perfectly fit this aim, because 
+                they could be either in the state of providing current or 
+                disabling current flow with several pins to represent its state 
+                for peripherals. <br><br>
+                
+                The wire which represent minimal gas indicator should be 
+                connected with a pin which represent 1st relay power supply. 
+                Pins which are shorted when power is supplied should be 
+                connected with a contactor which does or does not provide 
+                current to the pressure engine depends on current on its 
+                inductive coil. <br><br>
+
+                The wire which represents maximum gas indicator should goes to 
+                a power supply pin of the 2nd relay. A wire from a pin which 
+                is shorted under power supply presence should be connected with 
+                a contactor's inductive coil. <br><br>  
+                
+                In such configuration between minimal and maximum gas states a 
+                circuit is disconnected, therefore there is no power supply 
+                provided to the engine. To mitigate this issue contactor is 
+                shunted by providing connection from 2nd relay pin which is 
+                shorted when there is no power supplied to the relay. <br><br>
+
+                There is no electronics, just electrics, but I think it might 
+                be interested for my clients and readers, because some 
+                software engineering work requires to build special apparats 
+                which is later programmed. 
+            </p>
+            <h4>Handmade replacement of the touch panel</h4>
+            <p>
+                A client complained the microwave oven stops to respond on press 
+                of touch panel. <br><br>
+                
+                Further investigation shown a cable to the board had some broken 
+                contacts due erosion and oxidation. Soldering would not help 
+                here, because this contacts are made by spraying metal 
+                particles to the silicone surface. Usually you have to buy a 
+                new cable for replacement, but this days you could not find it 
+                on the market. <br><br>  
+
+                Handmade replacement of the touch panel is the next option. 
+                Small buttons were used to replace the touch panel and glued to 
+                the board. The next step was tediously soldering small wires 
+                taken from a transformer (they are varnished for insulation) to 
+                each button and interconnected with each other according to a 
+                circuit reverse engineered from the original cable. The end 
+                parts of this wires were soldering directly to the main board. <br><br>
+
+                <p align="center">
+                    <img src="/blog/assets/images/2024-04-21/handmade-touch-panel.jpg" width="100%"/>
+                </p> <br><br>
+                
+                After assembling it back test launches shown it works well and 
+                the microwave became ready to be sent back to the client.
+            </p>
+        </p>
+
+        A few related publications: <br>
+        <a href="https://gelassen.github.io/blog/2024/03/30/electronics-tech-notes-part-4-repair-sound-amplifier-and-tv.html">Electronics tech notes, part III: repairing sound amplifier and TV</a> <br>
+        <a href="https://gelassen.github.io/blog/2024/02/02/electronics-tech-notes-part-2-recover-manufactory-machine.html">Electronics tech notes, part II: recover a manufactory machine</a><br>
+        <a href="https://gelassen.github.io/blog/2024/01/21/electronics-tech-notes-part-1-getting-started.html">Electronics tech notes, part I: repair a power supply</a>
+    </body>
+</html>
