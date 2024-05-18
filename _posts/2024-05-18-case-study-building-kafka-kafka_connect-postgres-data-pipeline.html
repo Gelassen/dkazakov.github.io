@@ -249,6 +249,12 @@ modified_time: '2024-05-18'
         </p>
         <h3>Integration</h3>
         <p>
+            Basically, besides Kafka itself there are Zookeeper to manage its 
+            state, PostgreSQL database to export data from the message queue, 
+            Kafka Connect to make this automatically, data source which for 
+            this PoC a service on Python, REST server -- that is all should be 
+            integrated with each other. <br><br>  
+
             System parts which could be integrated with Kafka are called source 
             - place from where data come to the Kafka, - or sink -- place where data 
             from Kafka are mirrored. <br><br>
