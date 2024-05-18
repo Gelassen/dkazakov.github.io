@@ -444,6 +444,13 @@ modified_time: '2024-05-18'
             I don't remember what each of them means, but every type represents 
             a unique business offer which airline prepare for their customers 
             which direct impact on the final cost of the airplane ticket. <br><br>
+
+            In regard to integration Kafka Connect requires a schema to be passed 
+            with a message to a topic. <br><br>
+            
+            Producer service also packed into docker container, deployed 
+            together with the rest of the system and randomly 
+            generates a sample inventory each 1 to 7 seconds. <br><br>
             
             The full code is available under this <a href="https://github.com/Gelassen/Aeroflot/tree/main/pilot/producer">link</a> 
         </p>
