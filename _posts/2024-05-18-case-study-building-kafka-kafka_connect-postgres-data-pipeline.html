@@ -33,7 +33,7 @@ modified_time: '2024-05-18'
             - internal mechanisms used by Kafka to manage its state - which 
             caused me some issues which caused me to pivot a project from pure 
             apache/kafka to confluentinc/kafka implementation which has an offer 
-            of its code under acceptable open source license.  
+            of its code under acceptable open source license.  <br><br>
             
             This is a first project where I had used ChatGPT to configure Kafka, 
             write backend on Python and also to write this publication. It speed 
@@ -53,93 +53,112 @@ modified_time: '2024-05-18'
                 <img src="/blog/assets/images/2024-05-18/kafka-overview.png" width="100%"/>
             </p> <br><br>
 
-            <h4>1. Kafka Architecture Overview</h4>
+            <h4>1. Kafka Connect Architecture Overview</h4>
             <p>
-                <pre>
-                    Producers: Entities or applications that send data to Kafka. They publish messages to Kafka topics.
-                    Kafka Cluster: The core of Kafka, consisting of multiple Kafka brokers.
-                        Brokers: Individual servers that handle data storage, retrieval, and serve clients' requests.
-                    Topics: Logical channels to which messages are sent. Each topic can have multiple partitions.
-                        Partitions: Sub-divisions of topics for scalability and fault tolerance. Each partition is an ordered sequence of messages.
-                    Consumers: Entities or applications that read data from Kafka topics.
-                        Consumer Groups: A group of consumers that work together to consume a topic. Each message is processed by only one consumer in the group.
-                    ZooKeeper: A distributed configuration service used by Kafka to manage brokers and maintain metadata.
-                </pre>
+                <ul>
+                    <li><strong>Kafka Connect Cluster:</strong> The core system for managing connectors and workers.</li>
+                    <li><strong>Connectors:</strong> Plugins that manage data transfer between Kafka and other systems.
+                        <ul>
+                            <li><strong>Source Connectors:</strong> Import data from external systems into Kafka topics.</li>
+                            <li><strong>Sink Connectors:</strong> Export data from Kafka topics to external systems.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Workers:</strong> Instances of Kafka Connect that execute the connectors.
+                        <ul>
+                            <li><strong>Standalone Mode:</strong> Single worker instance, suitable for development and testing.</li>
+                            <li><strong>Distributed Mode:</strong> Multiple worker instances for load balancing and fault tolerance.</li>
+                        </ul>
+                    </li>
+                </ul>
             </p>
-            <h4>2. Message Flow in Kafka</h4>
+            
+            <h4>2. Data Flow in Kafka Connect</h4>
             <p>
-                Producer -> Kafka Topic (Partition) -> Broker -> Consumer <br><br>
-
-                Producers send messages to Kafka Cluster. <br>
-                Messages are stored in Partitions within Topics on various Brokers. <br>
-                Consumers pull messages from these partitions, ensuring each message is only processed once per consumer group. <br>
+                Source System -> Source Connector -> Kafka Topic -> Sink Connector -> Target System
             </p>
-            <h4>3. Kafka Topic and Partitioning</h4>
+            
+            <h4>3. Components in Detail</h4>
             <p>
-                Each topic is split into partitions:
-                <pre>
-                    Topic A:
-                    Partition 0: Messages 1, 2, 3, ...
-                    Partition 1: Messages 4, 5, 6, ...
-                    Partition 2: Messages 7, 8, 9, ...
-                </pre>
+                <strong>Connectors:</strong>
+                <ul>
+                    <li><strong>Source Connector:</strong> Reads data from a source system (e.g., a database, file system, or an application) and writes it to a Kafka topic.</li>
+                    <li><strong>Sink Connector:</strong> Reads data from a Kafka topic and writes it to a target system (e.g., a database, file system, or another application).</li>
+                </ul>
+                <strong>Workers:</strong>
+                <ul>
+                    <li><strong>Standalone Worker:</strong> A single process that runs both source and sink connectors.</li>
+                    <li><strong>Distributed Workers:</strong> Multiple processes that share the workload of connectors, providing scalability and fault tolerance.</li>
+                </ul>
             </p>
-            <h4>4. Replication and Fault Tolerance</h4>
+            
+            <h4>4. Connector Configuration</h4>
             <p>
-                <pre>
-                    Partition Replication: Each partition has replicas across multiple brokers.
-                        Leader: The primary replica that handles all reads and writes.
-                        Followers: Additional replicas that replicate the data and take over if the leader fails.
-                </pre>
+                <strong>Connector Configuration:</strong>
+                <ul>
+                    <li>Defines how data is read from or written to external systems.</li>
+                    <li>Contains properties like connection details, data format, and transformation rules.</li>
+                </ul>
             </p>
-            <h4>5. Kafka Producer API</h4>
+            
+            <h4>5. Task Distribution</h4>
             <p>
-                A simplified view:
-                <pre>
-                    Producer:
-                    Sends data -> Kafka Cluster
-                    Uses acks (acknowledgments) to ensure message delivery.
-                        acks=0: No acknowledgment
-                        acks=1: Leader acknowledgment
-                        acks=all: All replicas acknowledgment
-                </pre>
+                In a distributed setup, the data processing tasks are split among workers:
+                <ul>
+                    <li><strong>Worker 1:</strong>
+                        <ul>
+                            <li>Executes Task 1 (Source Connector Part)</li>
+                            <li>Executes Task 2 (Sink Connector Part)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Worker 2:</strong>
+                        <ul>
+                            <li>Executes Task 3 (Source Connector Part)</li>
+                            <li>Executes Task 4 (Sink Connector Part)</li>
+                        </ul>
+                    </li>
+                </ul>
             </p>
-            <h4>6. Kafka Consumer API</h4>
+            
+            <h4>6. Offset Management</h4>
             <p>
-                A simplified view:
-                <pre>
-                    Consumer:
-                        Reads data from Kafka Cluster.
-                        Maintains offsets (position in the partition) to track read messages.
-                        Part of a Consumer Group for load balancing and parallel processing.
-                </pre>
+                Kafka Connect manages the state of data processing using offsets:
+                <ul>
+                    <li><strong>Source Connector:</strong> Tracks the position in the source system to ensure data is not missed or duplicated.</li>
+                    <li><strong>Sink Connector:</strong> Tracks the position in Kafka topics to ensure data is processed sequentially.</li>
+                </ul>
             </p>
-            <h4>7. Kafka Streams API</h4>
+            
+            <h4>7. Transformations</h4>
             <p>
-                Illustrate how Kafka Streams processes data in real-time:
-                <pre>
-                    Streams Processor:
-                        Consumes data from one or more topics.
-                        Applies transformations (map, filter, aggregate).
-                        Produces results to output topics.
-                </pre>
+                Kafka Connect can apply transformations to data as it passes through:
+                <ul>
+                    <li><strong>Single Message Transforms (SMTs):</strong> Modify individual messages (e.g., filter, rename fields, change formats) before they reach the destination.</li>
+                </ul>
             </p>
-            <h4>8. Schema Registry and Serialization</h4>
+            
+            <h4>8. Monitoring and Management</h4>
             <p>
-                <pre>
-                    Producer -> Serializer (e.g., Avro, JSON, Protobuf) -> Kafka Topic
-                    Consumer <- Deserializer <- Schema Registry (ensures compatibility)
-                </pre>
+                Kafka Connect provides tools for monitoring and managing connectors and workers:
+                <ul>
+                    <li><strong>REST API:</strong>
+                        <ul>
+                            <li>Allows management of connectors (start, stop, configure) and workers.</li>
+                            <li>Provides metrics and status information.</li>
+                        </ul>
+                    </li>
+                    <li><strong>UI Tools:</strong> Many Kafka distributions include web interfaces for managing Kafka Connect.</li>
+                </ul>
             </p>
-            <h4>9. Use Case Examples</h4>
+            
+            <h4>9. Error Handling</h4>
             <p>
-                Scenarios where Kafka is used:
-                <pre>
-                    Real-time Data Processing: Collecting and processing log data.
-                    Event Sourcing: Storing events for later reprocessing.
-                    Stream Processing: Real-time analytics and transformations.
-                </pre>
+                Kafka Connect includes mechanisms for handling errors:
+                <ul>
+                    <li><strong>Dead Letter Queues:</strong> Messages that cannot be processed are sent to a separate Kafka topic for later analysis.</li>
+                    <li><strong>Retry Policies:</strong> Configurations that determine how many times a connector should retry a failed operation before giving up.</li>
+                </ul>
             </p>
+            
         </p>
         <h3>Apache Kafka Connect</h3>
         <p>
