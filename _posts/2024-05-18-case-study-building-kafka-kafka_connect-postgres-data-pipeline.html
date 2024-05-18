@@ -16,7 +16,7 @@ modified_time: '2024-05-18'
             Over passed week I learned a new tech stack and built a PoC for the airline 
             which is data pipeline for their stream of upcoming flights. The project is 
             based on Kafka, Kafka Connect and PostgreSQL with a REST server on 
-            Python. Everything containerized in Docker and run deployed over 
+            Python. Everything containerized in Docker and deployed over 
             Docker Compose. <br><br>
 
             Apache Kafka is an open source solution for a message queue which is 
@@ -24,14 +24,14 @@ modified_time: '2024-05-18'
             response to quick growth of upcoming data. <br>
             Kafka Connect is a solution to integrate Kafka with many data 
             sources and data storages by just providing configuration file. 
-            Then Kafka would automatically upload and data to & out the queue 
+            Then Kafka would automatically upload and export data to & out the queue 
             from & to specified source and sink databases. <br>
             PostgreSQL is just one more database which fits better my potential 
             customer needs. <br><br>
             
             Not Everything went smoothly. Kafka migrates from Zookeeper to KRaft 
             - internal mechanisms used by Kafka to manage its state - which 
-            caused me some issues which caused me to pivot a project from pure 
+            caused me some issues and pivot the project from pure 
             apache/kafka to confluentinc/kafka implementation which has an offer 
             of its code under acceptable open source license.  <br><br>
             
@@ -39,7 +39,7 @@ modified_time: '2024-05-18'
             write backend on Python and also to write this publication. It speed 
             up process of learning a new tech 
             stack on at least 50%. It is good for search, it is very good in 
-            refactoring code, it is code in code review. It is not good in 
+            refactoring code, it is good in code review. It is not good in 
             fully writing software, it could not (yet) fully replace your 
             experience. It still can not avoid mistakes. Despite on ChatGpt is 
             a good aid as an expert system for a software engineer, its future 
@@ -250,7 +250,7 @@ modified_time: '2024-05-18'
         <h3>Integration</h3>
         <p>
             System parts which could be integrated with Kafka are called source 
-            - place from where come to the Kafka, - or sink -- place where data 
+            - place from where data come to the Kafka, - or sink -- place where data 
             from Kafka are mirrored. <br><br>
             
             Kafka Connect allows to automatically import and export data by 
