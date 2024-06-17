@@ -1,0 +1,202 @@
+---
+layout: post
+title: 'Forecast sales system for an airline company, part I: working with one billion records'
+date: '2024-06-17'
+author: Gelassen
+tags: 
+modified_time: '2024-06-17'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>Intro</h3>
+        <p>
+            Within a scope of my my current contract as part of a team I have to 
+            develop and deliver a forecast sales system for an arline company. <br><br>
+
+            It has many challenges, but one of them is to work with big amount 
+            of data. It is not yet a BigData, but something which is close to it. <br><br>
+            
+            This publications described challenges discovered so far on a 
+            database level and ways to overcome them. 
+        </p>
+        <h3>Speed-up the development</h3>
+        <p>
+            During development you often have to prepare sql queries to extract 
+            necessary data from a database. For sophisticated queries it 
+            requires several run&check loops. <br><br>
+            
+            Such queries should be run relatively fast, but when you have a table 
+            with over a billion records which should be joined with another table 
+            with near one hundred millions records with performing extra 
+            operations such run&check loop takes more than hour. <br>
+            The rest of the code which is built upon this queries might might 
+            take execution time more than a business day. Each error you have 
+            made preparing a right sql query here would delay your feature 
+            completion on hours or even days! We have to look for options to 
+            mitigate this issue. <br><br>
+            
+            The solutions I have been found is to prepare a smaller subset of 
+            dataset to test and tune your queries. It will give you a fast 
+            feedback and after this you could switch on your real dataset. <br><br>
+            
+            For my specific use case I could build a dev table by either any 
+            of this two ways: <br><br>
+            <pre>
+                CREATE TABLE dev_inventory AS
+                SELECT * FROM inventory2223_sab
+                WHERE fltdatetime >= NOW() - INTERVAL '1 month';
+            </pre> <br><br>
+
+            <pre>
+                CREATE TABLE dev_inventory_sample AS
+                SELECT * FROM inventory2223_sab
+                TABLESAMPLE SYSTEM (10); -- 10% sample
+            </pre> <br><br>
+
+            The case shown in the last code snippet should give you a normally 
+            distributed dataset which is a some percent from your original data.  
+        </p>
+        <h3>Optimize queries</h3>
+        <p>
+            When I had finished with preparing reliable dev environment and 
+            a draft of my sql query, it was a time to further optimize it. <br><br>
+            
+            PostgreSQL has built-in benchmark tool which helps you to figure out 
+            performance of your queries. <br><br>
+
+            <pre>
+                EXPLAIN ANALYZE SELECT * 
+                FROM inventory2223_sab 
+                WHERE fltdatetime >= NOW() - INTERVAL '1 year';
+            </pre> <br><br>
+
+            It will show you time per stage breakdown to help you figure out 
+            bottlenecks and impact on performance by your recent tunning. <br><br>
+            
+            The second step was in preparing indexes on the most used columns. <br><br>
+
+            Obviously you have to include indexes on columns which participate 
+            in JOIN, but adding indexes has its own drawbacks -- when it 
+            increases search by your dataset, at the same time it increases 
+            time to insert or update your data. When you have such intensive 
+            stream of data like global airline booking system adding indexes 
+            could bring more harm than good. Anyway a several the most 
+            important fields had been added to indexation and wait for time to 
+            be checked with real message queue to checkup performance. <br><br> 
+            
+            <pre>
+                CREATE INDEX CONCURRENTLY idx_inventory_fltdatetime 
+                ON inventory2223_sab (fltdatetime);
+            </pre> <br><br>
+
+            Another interesting option is to check to use a partial index based 
+            on a subset data range. Only a period of time is used to building 
+            forecast, so it might be worth to investigate such way. <br><br>
+            
+            <pre>
+                CREATE INDEX CONCURRENTLY idx_inventory_recent_fltdatetime 
+                ON inventory2223_sab (fltdatetime)
+                WHERE fltdatetime >= NOW() - INTERVAL '1 year';
+            </pre> <br><br>
+
+            The next step would be to include parallelization on database level. 
+            The keyword 'CONCURRENTLY' in creating index above should help to 
+            speed-up indexation even further. 
+            
+            Further step would be partitioning the database by date. Due 
+            business specific nature of sql request to a database, I expect 
+            a huge gain in performance by using this technique, but it has not 
+            applied yet. <br><br>
+            
+            <pre>
+                CREATE TABLE inventory2022 
+                PARTITION OF inventory2223_sab 
+                FOR VALUES FROM ('2022-01-01') TO ('2022-12-31');
+                
+                CREATE TABLE tariffs2022 
+                PARTITION OF tariffs2223 
+                FOR VALUES FROM ('2022-01-01') TO ('2022-12-31');
+            </pre> <br><br>
+
+            Next step would be to try materialized views or caching systems 
+            like Redis or Memcached to speed-up performance of queries. It is 
+            arguable solution, because new data comes in millions records per 
+            day which force re-indexation and makes such caching not useful, 
+            but it might be useful for some part of our selects and we have to 
+            receive some data to check does it give as performance gains or not. <br><br>
+            
+            <pre>
+                CREATE MATERIALIZED VIEW mv_inventory_tariffs AS
+                SELECT i.*, t.*
+                FROM inventory2223_sab i
+                JOIN tariffs2223 t ON i.sfltno = t.fltnum AND i.fltdatetime = t.fltdat
+                WHERE i.fltdatetime >= NOW() - INTERVAL '1 year';
+
+                REFRESH MATERIALIZED VIEW mv_inventory_tariffs;
+            </pre>
+        </p>
+        <h3>Robust migration of data on remote server</h3>
+        <p>
+            Finally I had to migrate the dataset from a one database to another. 
+            The task takes ~30 hours and we had to make sure it would not 
+            go down. <br><br>
+            
+            When you disconnect from your SSH server, all processes associated 
+            with your ssh session are terminated as well. To make sure long 
+            running process continues its execution in the background, you have 
+            to use several extra steps. <br><br>
+            
+            Instruments like 'nohup', 'tmux' and 'systemd' services can help 
+            there. 'systemd' was the best fit for this task. <br><br>
+
+            You have to create a system unit file under the path /etc/systemd/system 
+            which would look like this: <br><br>
+
+            <pre>
+                [Unit]
+                Description=My Long Running Python Script
+                After=network.target
+
+                [Service]
+                Type=simple
+                User=your-username
+                WorkingDirectory=/home/your-username/path-to-your-script
+                ExecStart=/usr/bin/python3 /home/your-username/path-to-your-script/your_script.py
+                Restart=on-failure
+                StandardOutput=append:/home/your-username/path-to-your-script/logs/output.log
+                StandardError=append:/home/your-username/path-to-your-script/logs/error.log
+
+                [Install]
+                WantedBy=multi-user.target
+            </pre> <br><br>
+
+            The file is self explanatory, but I want you to draw your attention 
+            to several things. <br><br>
+
+            The first one is username you want this service to be run on. 
+            Without it the service will be run under the root which might be 
+            not what you are looking for. <br>
+            The second is it has a property for self-restart in case f error 
+            which might convenient in some scenarios. <br>
+            The third one is it has dependency on some set of system events 
+            which would help you to schedule your work in pipeline. <br> <br>
+            
+            To enable your have to execute this commands: <br><br>
+
+            <pre>
+                $ sudo systemctl daemon-reload
+                $ sudo systemctl enable my_python_script.service (optional: add service to start on OS launch)
+                $ sudo systemctl start my_python_script.service
+            </pre> <br><br>
+
+            To check the system status you could run this command: <br><br>
+
+            <pre>
+                $ sudo systemctl status my_python_script.service
+            </pre>
+        </p>
+    </body>
+</html>
