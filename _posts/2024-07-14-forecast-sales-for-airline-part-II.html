@@ -1,10 +1,10 @@
 ---
 layout: post
 title: 'Forecast sales system for an airline company, part II: service forecasting bookings by ML'
-date: '2024-07-14'
+date: '2024-07-20'
 author: Gelassen
 tags: 
-modified_time: '2024-07-14'
+modified_time: '2024-07-22'
 ---
 <html>
     <head>
@@ -16,53 +16,285 @@ modified_time: '2024-07-14'
             This a 2nd publication regarding on building forecast sales system for 
             an airline company which covers ML models and infrastructure to run it. <br><br>
             
-            Tech stack is: neuralforecast, pytorch-lightning, python, pydantic, 
-            sqlalchemy, asyncio, pytest, mypy.  
+            Tech stack is: Kafka, neuralforecast, pytorch-lightning, python, pydantic, 
+            sqlalchemy, asyncio, pytest, mypy, postgress.  
         </div>
         <h3>The nature and the structure of data</h3>
         <div>
-            <!-- TODO complete me -->
-            What we get as an input? (business perspective)
-            What we get as an output? (business perspective)
-            How would it look like in terms of ML model? (ML model perspective) 
+            The ultimate goal of the project is to get all business data and 
+            based on this forecast sales of flights tickets. The important 
+            point it should work better rather than current popular solutions 
+            which left Russian market dur politics enforced by USA. <br><br>
+            
+            The data business is able to offer is a history of bookings over 
+            several years. It includes: <br>
+
+            <ul>
+                <li>Flight number</li>
+                <li>Date of departure</li>
+                <li>Route: departure and destination airport</li>
+                <li>Cost of the ticket</li>
+                <li>Booking class (one from 25 possible items)</li>
+                <li>And many more</li>
+            </ul>
+
+            The output of the model is a forecast of bookings on each day 
+            before departure. Such knowledge gives business better 
+            understanding which price to set to reach the optimum and maximize 
+            their revenue. <br><br> 
+
+            In terms of the math and the ML we a fluctuation of value which 
+            should be predicted for a future time interval. Because data has 
+            multiple fields to predict, the task become more complex.
         </div>
         <h3>ML model</h3>
         <div>
-            <!-- TODO complete me -->
-            Time-series data
-            ML models which with it
-            Ways to versioning ML models
+            There is a special class of machine learning models which operates 
+            with time-series data. This is our case because our goal is to 
+            predict an amount on bookings in the future based on actual 
+            bookings in the past. <br><br>
+            
+            Such kind of models are good in prediction of seasonality and trends 
+            which is crucial in sales. <br><br>
+
+            Often data is smoothed to reduce impact of the noise and figured 
+            out an useful data. <br><br>
+
+            The simplest model predicts one variable over time. However in our 
+            case we have a cortage of variables 'flight number' - 'date' - 
+            'cabin' - 'booking class'. In the first iteratiion during 
+            decomposition of the task the ML team ended up with a single model 
+            per cortage which gives us near 40 000 models (1600 flights x 
+            25 booking classes). <br><br>
+
+            ML models which with it <!-- TODO complete me -->
+
+            Ways to versioning ML models <!-- TODO complete me -->
+            Aggregating ML models into codebase has their own challenges. At 
+            first, besides model you have to store hyperparameters which 
+            define model's work. At second, work of the models depends on the 
+            data (train, test, validate) which also good to save and versioning. 
+            At third, work on ML models implies multiple try&run iteration 
+            which gives a set of different versions of the same model which 
+            sometimes necessary to store simultaniously. The market offer a 
+            special class of such solutions call ML Registry. <br><br>
+            
+            Quick research shown <a href="https://github.com/mlflow/mlflow">mlflow</a> 
+            as the best suitable for project's requirements. However despite on 
+            its rich functionality, it is a bit overkill for current state of the 
+            project. We ended up to store the actual implementation of the 
+            model within codebase and the rest work to leave in a separate 
+            repository.  
         </div>
         <h3>Service that runs this model</h3>
         <div>
-            <!-- TODO complete me -->
-            General overview
-            Clean architecture principles and pythonic way
-            Prepare the data: dealing with large dataset (link to publication)
-            Grouping the data and dataframe
-            Parallelization, couroutines and GIL
-            Dynamic typisation
-            Test coverage
-            Scheduling
-            Challenges to deal with multiple repositories and large files in git
-        </div>
-        <h3>How to deal with lack of static typisation?</h3>
-        <div>
-            <h4>Migrate on pyndatic models</h4>
+            <h4>General overview</h4>
+            <div>
+
+                <p align="center">
+                    <img src="/blog/assets/images/2024-07-20/main-components.png" width="100%"/>
+                </p> <br><br>
+
+                The model which forecast bookings is a core of the system. The 
+                first iteration of the project actually has two models -- one is 
+                based on a machine learning and another one is based on a classic math. 
+                They are used as two approaches to solve the same task as a part 
+                of R&D. <br><br>
+    
+                The source of the data is customer's inventory system which is 
+                based on the Kafka. Kafka's topics with high-frequnecy are populated with 
+                new bookings. The one of our services listens a group of Kafka's topics, 
+                recives and parse data finally saving it in several table where is 
+                key two are flights and flights data where the 1st represent a 
+                flight and the 2nd is a recently made orders. Database with this 
+                tables is replicated - the first database contains all actual 
+                flights which are going to happend and the second database contains 
+                flights which has been happened already. As soon as a flight 
+                departured from an airport, this flight's data is moved from the 
+                one database to another database. <br><br>
+                
+                Later by schedule this data is queried and passed to a model to 
+                build forecasts. The results are saved in database for a future usage. 
+                The future work with this data is done over a API service. <br><br>
+    
+                To make it clear: we have Kafka which is served as a message queue, 
+                we have a history and a maintenance databases, a service which runs 
+                forecasts by ml and math models by schedule, the API REST web 
+                service which provides access to this data. <br><br> 
+    
+                Each of this services is run in the docker container aggregated 
+                over a docker compose with future plans to migrate on kubernetes. <br><br>
+                
+                <p align="center">
+                    <img src="/blog/assets/images/2024-07-20/running-ml-model-sequence-diagramm.png" width="100%"/>
+                </p> <br><br>
+
+                Cron once a week run this calculations
+                Application query all flight unique ids from the 1st database 
+                and iterate through all flights. For a specific id it query 
+                flight and flight data over the passed year from the 2nd 
+                database. After this it creates profiles (group by booking 
+                class - date-to-departure & bookings) and iterate over all 
+                profiles. <br><br>
+
+                Based on a flight and a booking class it revese engineer cabin 
+                and find model on the disk by iterating names of fodlers. When 
+                a model and input data are here it runs a forecast. The results 
+                of forecast are extended with extra data and saved into the 1st 
+                database. <br><br>
+
+                Everything is packed into the Dockerfile.
+            </div>
+
+            <h4>Clean architecture principles and the pythonic way</h4>
+            <div>
+                Python is known as a multiparadigm language and it is important 
+                to write on the each language in a way which is natural for them. 
+                However quick research shown no breaks in my UX -- in short 
+                everywhere you expect to use OOP principles they should be used. <br><br>
+
+                Principles of the clean architecture fit python projects as 
+                well making it clear layered and low coupled. 
+            </div>
+
+            <h4>Prepare the data: dealing with a large dataset</h4>
+            <div>
+                This is my first project where I have to deal with more than 
+                one billion records. Challenges I met and solutions I had 
+                found is covered by 
+                <a href="https://gelassen.github.io/blog/2024/06/17/forecast-sales-for-airline-part-I-working-with-one-billion-records.html">this publication</a> 
+            </div>
+
+            <h4>Grouping the data and dataframe</h4>
             <div>
                 <!-- TODO complete me -->
+            </div>
+
+            <h4>Parallelization, couroutines and GIL</h4>
+            <div>
+                Python language design has such thing like a global interpreter 
+                locker (GIL) which acts as a mutex limiting perfomance gains 
+                from multithread operations for CPU-bound tasks. However for 
+                IO-bound tasks it is not an isssue. It means creating a thread 
+                or coroutine on python wouldn't give you results which you 
+                expects when you do the same on others languages. <br><br>
+                
+                A workaround for this is to spawn an another process instead 
+                of thread. It overcomes GIL limitations on python and gives you 
+                a parallelization. <br><br>
+
+                It was nice to see besides others instruments for concurrent 
+                execution of the program Python supports coroutines over 
+                asyncio library. It looks as a 
+                <a href="https://gelassen.github.io/blog/2020/09/05/kotlin-coroutines-overview.html">superior solution for multithreading tasks.</a>
+            </div>
+
+            <h4>Test coverage</h4>
+            <div>
+                Test coverage is done over pytest. With some nuances which 
+                makes each framework unique it works in the similar way like 
+                the rest testing frameworks I have worked so far. <br><br>
+                
+                Despite on TDD is a superior way to develop software with 
+                limited time I cover by tests main execution scenarious and 
+                write a unit test per bug which has been discovered. It allows 
+                verify software does what is expected to do in an automatic 
+                way and confirm issues has been made in the past are fixed and 
+                do not repeat.  
+            </div>
+            
+            <h4>Scheduling</h4>
+            <div>
+                Such calculations of forecasts should be done by a schedule. 
+                Ideally when new critical amount of the data comes, forecasts 
+                should be recalculated. However client doesn't ended up with a 
+                decision yet how much new data is considered enough to schedule  
+                recalculations, so we just run this service by schedule, e.g. 
+                each Sunday midnight. <br><br>
+                
+                Cron has been choosen as a schedule solution. Cron is a native 
+                for linux systems; simple, but powerful it covers all current 
+                needs of the project. It is even supported out-of-the-box in 
+                kubernetes which would be helpfull when the team will decide to 
+                migrate on it. <br><br>
+                
+                However right now I run it from Dockerfile and it has some 
+                caveats. <br><br>
+
+                Cron changes context of the execution of the code it launches. 
+                In my case it had made all env variable unavailable and I had 
+                to source them explicitly from the initialization shell script. <br> 
+                Also it had made external volume mapped to a container 
+                unavailable and I had not managed this issues yet. As a 
+                workaround I cloned all required files into the repo directly 
+                and a create a based image to avoid frequent recreation of this
+                less often chaning piece of the logic. It made solution less 
+                elegant rather than the initial one, but still workable and 
+                production ready.    
+
+            </div>
+
+            <h4>Challenges to deal with multiple repositories and large files in git</h4>
+            <div>
+                The project is scattered among several repositories. To make it 
+                run smooth we have to do some extra steps. Repo sync seems like 
+                the right tool to do this. It is based on the git and allows 
+                operates with your repositories in the unified way. <br><br>
+
+                Another issue is ML models stored in git. There are many of them 
+                and they stored a big amount of the space. Git is not designed 
+                for this: tracking all of them and a history (!) of their 
+                changes will make further work wit h git unconvenient. <br><br>
+                
+                Git LFS is a solution for it. It is an extension for Git that 
+                replaces large files in your repository with text pointers 
+                while storing the file contents on a remote server. This keeps 
+                your repository lean while still allowing you to manage large 
+                files. <br><br>
+
+                This task is not implemented yet and stored in the backlog.
+            </div>
+
+            <h4>Mitigate docker blocks risks</h4>
+            <div>
+                <!-- TODO complete me  -->
+            </div>
+        </div>
+        <h3>How to deal with a lack of the static typed?</h3>
+        <div>
+            The lack of the static typed became a serious issue. Especially after 
+            change requests and refactoring I started to get unexpected types of 
+            data in methods. Something which never happened on Java or Kotlin. <br><br>
+            
+            Several steps had been made to solve this issue. 
+
+            <h4>Migrate on pyndatic models</h4>
+            <div>
+                Pydantic models allows you to define a model of your data and 
+                at the same time enforce an automatic validation of data fields. 
+                It was a good first step to sanitize your data types.
             </div>
             <h4>Defensive programming</h4>
             <div>
-                <!-- TODO complete me -->
+                The next step was an applying defensive programming techniques. 
+                It means checking types of input data within the function. Such 
+                technique helped a lot t quickly spot all current and potential 
+                issues.  
             </div>
             <h4>Static analyzer mypy</h4>
             <div>
-                <!-- TODO complete me -->
+                Python ecosystem also offer a mypy -- static analyzer of your 
+                code which point out where you get data with type different 
+                from what you has defined previously. It gives the most 
+                comprehensive solution to spot the issues with your code data 
+                types.  
             </div>
         </div>
 
-        Relted publications: <br>
-        <!-- TODO complete me -->
+        Related publications: <br>
+        <a href="https://gelassen.github.io/blog/2023/08/20/case-study-automatic-chinese-text-tokenisation-and-translation.html">Case study: automatic Chinese text word segmentation and translation</a> <br>
+        <a href="https://gelassen.github.io/blog/2020/12/05/housing-price-prediction.html">Case study: ML. Housing price prediction</a> <br>
+        <a href="https://gelassen.github.io/blog/2023/07/22/multicomponent-project-deployment-over-docker.html">Docker: multicomponent project deployment</a> <br>
+        <a href="https://github.com/Gelassen/Aeroflot">Docker based Kafka - Kafka Connect - PostgreSQL pipeline with automatic export data from queue to database with REST server on Python to read this data. Intended for needs of the airline.</a>
     </body>
 </html>
