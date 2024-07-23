@@ -61,22 +61,29 @@ modified_time: '2024-07-22'
             out an useful data. <br><br>
 
             The simplest model predicts one variable over time. However in our 
-            case we have a cortage of variables 'flight number' - 'date' - 
-            'cabin' - 'booking class'. In the first iteratiion during 
+            case we have a tuple of variables 'flight number' - 'date' - 
+            'cabin' - 'booking class'. In the first iteration during 
             decomposition of the task the ML team ended up with a single model 
-            per cortage which gives us near 40 000 models (1600 flights x 
+            per tuple which gives us near 40 000 models (1600 flights x 
             25 booking classes). <br><br>
 
-            ML models which with it <!-- TODO complete me -->
+            Architecture of the ML model looks like this: <br>
+            - AutoCorrelation layer which spot period-based dependencies and 
+            does time-delay aggregation <br>
+            - LayeredNorm layer to spot seasonal part <br>
+            - MovingAverage layer to spot trends <br>
+            - SeriesDecomposition layer <br>
+            - EncoderLayer <br>
+            - DecoderLayer <br>
+            - <a href="https://proceedings.neurips.cc/paper/2021/hash/bcc0d400288793e8bdcd7c19a8ac0c2b-Abstract.html">Autoformer</a>  <br><br>
 
-            Ways to versioning ML models <!-- TODO complete me -->
             Aggregating ML models into codebase has their own challenges. At 
             first, besides model you have to store hyperparameters which 
             define model's work. At second, work of the models depends on the 
             data (train, test, validate) which also good to save and versioning. 
             At third, work on ML models implies multiple try&run iteration 
             which gives a set of different versions of the same model which 
-            sometimes necessary to store simultaniously. The market offer a 
+            sometimes necessary to store simultaneously. The market offer a 
             special class of such solutions call ML Registry. <br><br>
             
             Quick research shown <a href="https://github.com/mlflow/mlflow">mlflow</a> 
@@ -102,15 +109,15 @@ modified_time: '2024-07-22'
                 of R&D. <br><br>
     
                 The source of the data is customer's inventory system which is 
-                based on the Kafka. Kafka's topics with high-frequnecy are populated with 
+                based on the Kafka. Kafka's topics with high-frequency are populated with 
                 new bookings. The one of our services listens a group of Kafka's topics, 
-                recives and parse data finally saving it in several table where is 
+                receives and parse data finally saving it in several table where is 
                 key two are flights and flights data where the 1st represent a 
                 flight and the 2nd is a recently made orders. Database with this 
                 tables is replicated - the first database contains all actual 
-                flights which are going to happend and the second database contains 
+                flights which are going to happened and the second database contains 
                 flights which has been happened already. As soon as a flight 
-                departured from an airport, this flight's data is moved from the 
+                departed from an airport, this flight's data is moved from the 
                 one database to another database. <br><br>
                 
                 Later by schedule this data is queried and passed to a model to 
@@ -137,8 +144,8 @@ modified_time: '2024-07-22'
                 class - date-to-departure & bookings) and iterate over all 
                 profiles. <br><br>
 
-                Based on a flight and a booking class it revese engineer cabin 
-                and find model on the disk by iterating names of fodlers. When 
+                Based on a flight and a booking class it reverse engineer cabin 
+                and find model on the disk by iterating names of folders. When 
                 a model and input data are here it runs a forecast. The results 
                 of forecast are extended with extra data and saved into the 1st 
                 database. <br><br>
@@ -148,7 +155,7 @@ modified_time: '2024-07-22'
 
             <h4>Clean architecture principles and the pythonic way</h4>
             <div>
-                Python is known as a multiparadigm language and it is important 
+                Python is known as a multi paradigm language and it is important 
                 to write on the each language in a way which is natural for them. 
                 However quick research shown no breaks in my UX -- in short 
                 everywhere you expect to use OOP principles they should be used. <br><br>
@@ -166,16 +173,36 @@ modified_time: '2024-07-22'
             </div>
 
             <h4>Grouping the data and dataframe</h4>
-            <div>
-                <!-- TODO complete me -->
+            <div>              
+                Data which has been extracted from flights and flights data 
+                tables should be grouped in a special manner before being passed 
+                to a ML model. Technically we have to prepare a dictionary of booking 
+                classes served as keys where values are lists of dates and 
+                bookings on each date. <br><br>
+                 
+                <pre>
+                    data = {
+                        'E': ([1, 2, 3], [1.0, 2.0, 6.0]),
+                        'G': ([1, 2, 3], [2.5, 2.5, 3.0]),
+                        'L': ([1, 2, 3], [2.5, 3.5, 3.0]),
+                        'O': ([1, 2, 3], [3.0, 3.5, 3.5])
+                    }
+                </pre> <br><br>
+
+                It is done over DataFrame. <br><br>
+
+                I am fascinated about a power of the panda's DataFrame. It 
+                allows to do a lot of things on sophisticated data structures 
+                and at the same time it can be used as an input and return 
+                parameters. <br><br>
             </div>
 
-            <h4>Parallelization, couroutines and GIL</h4>
+            <h4>Parallelization, coroutines and GIL</h4>
             <div>
                 Python language design has such thing like a global interpreter 
-                locker (GIL) which acts as a mutex limiting perfomance gains 
+                locker (GIL) which acts as a mutex limiting performance gains 
                 from multithread operations for CPU-bound tasks. However for 
-                IO-bound tasks it is not an isssue. It means creating a thread 
+                IO-bound tasks it is not an issue. It means creating a thread 
                 or coroutine on python wouldn't give you results which you 
                 expects when you do the same on others languages. <br><br>
                 
@@ -196,7 +223,7 @@ modified_time: '2024-07-22'
                 the rest testing frameworks I have worked so far. <br><br>
                 
                 Despite on TDD is a superior way to develop software with 
-                limited time I cover by tests main execution scenarious and 
+                limited time I cover by tests main execution scenarios and 
                 write a unit test per bug which has been discovered. It allows 
                 verify software does what is expected to do in an automatic 
                 way and confirm issues has been made in the past are fixed and 
@@ -212,10 +239,10 @@ modified_time: '2024-07-22'
                 recalculations, so we just run this service by schedule, e.g. 
                 each Sunday midnight. <br><br>
                 
-                Cron has been choosen as a schedule solution. Cron is a native 
+                Cron has been chosen as a schedule solution. Cron is a native 
                 for linux systems; simple, but powerful it covers all current 
                 needs of the project. It is even supported out-of-the-box in 
-                kubernetes which would be helpfull when the team will decide to 
+                kubernetes which would be helpful when the team will decide to 
                 migrate on it. <br><br>
                 
                 However right now I run it from Dockerfile and it has some 
@@ -228,7 +255,7 @@ modified_time: '2024-07-22'
                 unavailable and I had not managed this issues yet. As a 
                 workaround I cloned all required files into the repo directly 
                 and a create a based image to avoid frequent recreation of this
-                less often chaning piece of the logic. It made solution less 
+                less often changing piece of the logic. It made solution less 
                 elegant rather than the initial one, but still workable and 
                 production ready.    
 
@@ -257,7 +284,26 @@ modified_time: '2024-07-22'
 
             <h4>Mitigate docker blocks risks</h4>
             <div>
-                <!-- TODO complete me  -->
+                The work and support of the project may be blocked in case of 
+                politically forced blocking of the docker ecosystem. <br><br>
+
+                At the end of May 2024, we encountered the fact that docker 
+                repositories and servers were blocked for users from the Russian 
+                Federation. <br><br>
+
+                A possible solution to this problem is to set up your own 
+                internal repository from which to download docker images or to 
+                pass a proxy to bypass restrictions. <br><br>
+
+                Proxy passing, and even using docker images as is, opens up a 
+                security attack vector associated with introducing malware into 
+                images (supply chain attack). Docker provides a service for 
+                automatic image checking, but it is not free, and it will be 
+                even more difficult with the next politically justified blocking 
+                of the docker ecosystem. <br><br>
+
+                When setting up your own internal repository, this check will also 
+                need to be done on your own.
             </div>
         </div>
         <h3>How to deal with a lack of the static typed?</h3>
@@ -292,9 +338,9 @@ modified_time: '2024-07-22'
         </div>
 
         Related publications: <br>
+        <a href="https://gelassen.github.io/blog/2024/06/17/forecast-sales-for-airline-part-I-working-with-one-billion-records.html"></a>
+        <a href="https://gelassen.github.io/blog/2024/05/18/case-study-building-kafka-kafka_connect-postgres-data-pipeline.html">Docker based Kafka - Kafka Connect - PostgreSQL pipeline with automatic export data from queue to database with REST server on Python to read this data. Intended for needs of the airline.</a>
         <a href="https://gelassen.github.io/blog/2023/08/20/case-study-automatic-chinese-text-tokenisation-and-translation.html">Case study: automatic Chinese text word segmentation and translation</a> <br>
         <a href="https://gelassen.github.io/blog/2020/12/05/housing-price-prediction.html">Case study: ML. Housing price prediction</a> <br>
-        <a href="https://gelassen.github.io/blog/2023/07/22/multicomponent-project-deployment-over-docker.html">Docker: multicomponent project deployment</a> <br>
-        <a href="https://github.com/Gelassen/Aeroflot">Docker based Kafka - Kafka Connect - PostgreSQL pipeline with automatic export data from queue to database with REST server on Python to read this data. Intended for needs of the airline.</a>
     </body>
 </html>
