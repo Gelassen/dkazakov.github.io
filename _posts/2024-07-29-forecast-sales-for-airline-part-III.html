@@ -1,10 +1,10 @@
 ---
 layout: post
-title: 'Forecast sales system for an airline company, part III: overcoming organisation and management challenges'
-date: '2024-07-29'
+title: 'Forecast sales system for an airline company, part III: overcoming organization and management challenges'
+date: '2024-07-30'
 author: Gelassen
 tags: 
-modified_time: '2024-07-29'
+modified_time: '2024-07-30'
 ---
 <html>
     <head>
@@ -13,8 +13,8 @@ modified_time: '2024-07-29'
     <body>
         <h3>Intro</h3>
         <div>
-            This is a third publication in the seria of building forecast sales 
-            system for an airline. It covers organisation and management 
+            This is a third publication in series of building forecast sales 
+            system for an airline. It covers organization and management 
             challenges have been appearing in this project and solutions to 
             solve them.  
         </div>
@@ -27,25 +27,25 @@ modified_time: '2024-07-29'
 
             At first, the classic set of scrum methods was offered to fix silo of 
             project knowledge: <br> 
-            - formalisation of requirements by tickets in CRM with user stories in 
+            - formalization of requirements by tickets in CRM with user stories in 
             the kanban style <br>
             - daily stand-ups in chat by sharing what each team manger did, 
             planning to do and blockers on his or her way <br>
             - meeting minutes after calls to track agreements, action points and 
             responsible persons <br><br>
 
-            At second, the set of measures were introduced to stabilise codebase 
+            At second, the set of measures were introduced to stabilize codebase 
             and make sure we always have a stable version of the project ready to 
             deploy for the client: <br> 
             - setup and keep up-to-date README file with all steps to deploy and 
             run the project <br>
             - close the master branch for writing and push all work via Pull 
-            Requests after code review working by gitflow in separate branches <br> 
+            Requests after code review working by GitFlow in separate branches <br> 
             - set-up Continues Integration to compile project and run automate 
             tests to confirm stability of the project in the automated way 
             (still in backlog) <br><br> 
 
-            Organisational flaws were offered to solve by following set of measures: <br> 
+            Organizational flaws were offered to solve by following set of measures: <br> 
             - fix changes in requirements and scope of the project within a 
             sprint to let the team focus on task and deliver it <br>
             - setting up relationships with the both two key stakeholders and gather 
@@ -61,7 +61,7 @@ modified_time: '2024-07-29'
             Similar to like healthy person could pass through this without 
             much issues, but a person with broken or suppressed immune system 
             get ill, our projects pass through all challenges when everything 
-            is organised right and get bad when something within is going wrong. <br>
+            is organized right and get bad when something within is going wrong. <br>
             That's why it is important to setup the right set of measures in 
             management and development work since the beginning and evolve it 
             with time when a new challenges have come.      
@@ -70,130 +70,356 @@ modified_time: '2024-07-29'
         <div>
             <h4>Issue</h4>
             <div>
-                - the most of the knowledge within team members heads
-                - specification doesn't cover recent key decisions
-                - no road map
-                - no a regular update on what is going within a project
-                - lack of formalised relevant requirements
+                - the most of the knowledge within team members heads (knowledge silos) <br>
+                - specification doesn't cover recent key decisions <br>
+                - no road map <br>
+                - no a regular update on what is going within a project <br>
+                - lack of formalized relevant requirements <br>
             </div>
             <h4>Solution</h4>
             <div>
-
+                - formalize knowledge into the specification or tickets <br>
+                - map specification into epic tickets that brings road map, hierarchy 
+                and structure into work planning <br>
+                - schedule and perform daily meetings in the way what was done 
+                yesterday, which task would be taken today, what kind of 
+                blockers each team member has right now <br>
+                - new request from client should be tracked by ticket which 
+                should be put in the backlog with the future prioritization   
             </div>
         </div>
         <h3>Miscommunication with a client</h3>
         <div>
             <h4>Issue</h4>
             <div>
-                - the client insist on one thing referring to the past when a vendor refers to another thing
+                - the client insist on one thing referring to the past when a 
+                vendor refers to another thing
             </div>
             <h4>Solution</h4>
             <div>
-                
+                - all calls and meetings in person should be followed-up by a 
+                protocol (aka meeting minutes) decisions, actions points and 
+                responsible parties should be tracked and emphasized. This 
+                protocol become an official agreement if there is no one added 
+                corrections and adjustments afterwards   <br>
+                - result of delivered feature should be shown up to the client 
+                on a regular basis to gather feedback <br> 
             </div>
         </div>
-        <h3></h3>
+        <h3>There is no track of the recently made decisions</h3>
         <div>
             <h4>Issue</h4>
             <div>
-                There is no track of the recently made decisions
-                - passed meetings leaves vagues outcomes in the heads of parties
-                - difficulties to refer to reached in the past agreements
+                - passed meetings leaves vague outcomes in the heads of parties <br>
+                - difficulties to refer to reached in the past agreements <br>
             </div>
             <h4>Solution</h4>
             <div>
-                
+                Similar to the previous point: <br>
+                - all calls and meetings in person should be followed-up by a 
+                protocol (aka meeting minutes) decisions, actions points and 
+                responsible parties should be tracked and emphasized. This 
+                protocol become an official agreement if there is no one added 
+                corrections and adjustments afterwards   <br>
+                - result of delivered feature should be shown up to the client 
+                on a regular basis to gather feedback <br> 
             </div>
         </div>
-        <h3></h3>
+        <h3>No clear plan on what we deliver and when</h3>
         <div>
             <h4>Issue</h4>
             <div>
-                No clear plan on what we deliver and when
-                - a whole project looks like a single piece of work which should be tackled 
-                - split on separate pieces exists, but only over a oral agreement between two initial members of the team
-                - change requests and shift in the date of delivery are not tracked as a consequence 
+                - a whole project looks like a single piece of work which should 
+                be tackled <br>
+                - split on separate pieces exists, but only over a oral agreement 
+                between two initial members of the team <br>
+                - change requests and shift in the date of the delivery are not 
+                tracked as a consequence 
             </div>
             <h4>Solution</h4>
             <div>
-                
+                - formalize knowledge on the level of tickets <br>
+                - map specification to tickets; it might look as a set of epic 
+                tasks which are later separated on much smaller pieces of work 
+                with cross-references on each other <br>
+                - carefully listen a client for an each changes request, put it 
+                as an user stories and all necessary details into the ticket, 
+                put the ticket in the bottom of the backlog <br>
+                - if client insist to do this right now, communicate with this 
+                a shift in the delivery schedule, increasing budget or drop of 
+                another functionality to compensate increasing work within scope   
             </div>
         </div>
         <h3>No ways to verify we have a currently working software in the repository</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - each change in the code, each commit is a potential bug <br>
+                - therefore it becomes crucial to verify a compilation and a 
+                stable work of the codebase on an each commit <br>
+                - lack of such verification is a serious issue
             </div>
             <h4>Solution</h4>
             <div>
-                
+                - setup a Continues Integration \ Continues Deployment (CI\CD) 
+                process; it basic version it would compile your code on each 
+                commit and can be extended to run automatic jobs including 
+                tests and deployment. <br>
+                - close a master branch from writing and do all work in branches 
+                which are later, by completion, would be merged with the master <br>
+                over Pull Requests (PR) and code review with running tests by CI  
             </div>
         </div>
         <h3>No clear description how to build and deploy a project</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - access to the repo is not enough to compile and deploy the 
+                project <br>
+                - despite on the project is based on docker which allows to run 
+                project within 
+                <a href="https://gelassen.github.io/blog/2023/07/22/multicomponent-project-deployment-over-docker.html">one command</a>, 
+                you can not really do this in one step because of many optional 
+                features, configuration files and shell scripts  
             </div>
             <h4>Solution</h4>
             <div>
-                
+                - for such scenarios a clear and comprehensive README file 
+                should be added within repository which describes how to 
+                compile and deploy the project <br>
+                - potential some extra work could resolve the most of this 
+                issues and fully automate the whole process
             </div>
         </div>
-        <h3>Delivery of the project mostly depends on heroism of individual members rather than on set of measures and practices reducing uncertainty and making progress further more stable</h3>
+        <h3>Delivery of the project mostly depends on heroism of individual 
+            members rather than on set of measures and practices reducing 
+            uncertainty and making progress further more stable</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - engineers always face with new tasks for them; engineering 
+                process often is not a set of steps to complete to get things 
+                done, but an invention of a new thing <br>
+                - besides engineering challenges organizational and business 
+                challenges makes this work even more complicated <br>
+                - even if all parties do an excellent work to clarify and 
+                write down all requirements and expectations, a few months 
+                later business environment will change which will lead to 
+                changes in requirements <br>
+                - in this way engineering process doesn't look like a factory 
+                where you put resources at the start and get result at the end, 
+                but an innovation process with multiple iterations where each 
+                round brings new requirements to a product and evolve it with 
+                time       
             </div>
             <h4>Solution</h4>
             <div>
+                Our ability to deliver a product to a client should not depend 
+                solely on the personal heroism of each team member. It should 
+                be based on a systematic set of actions, by performing which 
+                we will steadily move forward, minimizing known risks. <br>
+
+                One of the issues with this is applying the whole set of the 
+                best practices becomes very costly. One american engineering 
+                company who do this and with whom I had a chance to work with 
+                sell their engineer hour by 250 USD per a team member. <br>
                 
+                A possible solution for this is to start with minimum set of 
+                such practices and gradually extend it to meet a growing 
+                complexity of the project by spotting rising issues and choose 
+                an appropriate solution for them. <br>
+                
+                In this way each project would require their own set of 
+                measures which makes its unique in terms of organization and 
+                management. That's why I warn you to use this set of measures 
+                described here as a reference, but not as a ready-to-implement 
+                action plan. 
             </div>
         </div>
         <h3>Stakeholders of the project are not clearly identified and involved in the work with the team</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - closer to a final date of the delivery the team get a 
+                negative feedback from a client with many change requests <br>
+                - the team closely work with one stakeholder, but actual user 
+                of the product is a different department <br>
+                - there was not a close work with this people during a whole 
+                lifecycle of the project, therefore their requirements to a 
+                product was not considered and covered   
             </div>
             <h4>Solution</h4>
             <div>
-                
+                - setup communication channel with all key stakeholders <br>
+                - regularly show a current version of product and gather 
+                feedback; in practices of Agile and Scrum it should be done 
+                at the end of each sprint -- once in each two weeks. <br>
+                - think about others people who will use this product or 
+                whose work would be affected directly and indirectly to gather 
+                their requirements and mitigate sabotage of product 
+                implementation 
             </div>
         </div>
         <h3>A lot of changes in requirements on the fly when deadline and budget are fixed</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - new requests come from the client when a budget and a deadline 
+                are fixed <br>
+                - work on the math module is a true R&D with constant adjustments <br>
+                - database schema evolving with years and new requests with 
+                impact on a whole project <br>
+                - the client is a government company work with whom is specially 
+                regulated by a federal law to mitigate risks of corruption which 
+                brings restrictions on types of contract we could sign  
             </div>
             <h4>Solution</h4>
             <div>
+                The issue with changing requirements are known and even natural 
+                for software development. Even if all parties do an excellent 
+                work to clarify and write down all requirements and 
+                expectations, a few months later business environment will 
+                change which will lead to changes in requirements. <br><br>
+
+                The change in requirements is normal. What is not normal 
+                is an attempt to fit such kind of work in the boundaries of 
+                not an appropriate contract. <br><br>
+
+                The industry developed set of practices (Agile, Scrum, Lean 
+                principles) to meet with such needs. 
+                <a href="https://savvycomsoftware.com/blog/common-it-contracts/">Dedicated team or time & materials</a> 
+                types of contracts should be used this, but the russian federal 
+                doesn't allow this. <br><br>
                 
+                It might sounds fun, but the lack of experience of working on 
+                projects with a corrupted client (the client who used this 
+                project to steal money) doesn't allow me to give a proper 
+                recommendation how to cope with this. However the following 
+                roadmap at the first perspective looks right: <br><br>
+
+                - initiate lobby of a new law which would better fit a nature 
+                of software development <br>
+                - meanwhile do your best to fit the reality of the custom 
+                software development into the existing forms of law regulations <br>
+                - do it by iterations where each iteration brings product 
+                closer to a final product <br>
+                - freeze change in requirements till the end of each 
+                iteration with following change of 
+                <a href="https://www.atlassian.com/agile/agile-at-scale/agile-iron-triangle">the scope, budget and deadline</a> <br>
+                - build mutually trusted relationships between all involving 
+                parties in the software delivery    
             </div>
         </div>
         <h3>Unexpected illness of the key team member with loss valuable knowledge besides team's velocity</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - an one of team members had been injured with hospitalization 
+                for a month or even more <br>
+                - it caused a loss of a valuable knowledge about the project <br> 
+                - it also caused a decrease in the team velocity to deliver new 
+                functionality <br>
+                - generally it is known as a bus factor
             </div>
             <h4>Solution</h4>
             <div>
+                How would you deliver the project when one or more your team 
+                members get crashed under the bus? That's how this risk is 
+                formalized in working environments I lived and worked. Answering 
+                on this question helps you proactively develop set of steps to 
+                mitigate this risks. <br><br>
                 
+                When you lose a team member by any reason, you don't lose just 
+                a worker, you lose unique project and business knowledge this 
+                person has together with his technical expertise which takes 
+                years to gain and sometimes quite unique, so it become 
+                difficult to replace. That's why retaining your talents is even 
+                more important rather to find and hire them. However, there 
+                are also set of practices who minimize loss from team member 
+                temporarily or permanent leave. <br><br>
+                
+                At first, formalize your knowledge about the product and 
+                requirements in a form of specification, tickets with user 
+                stories extend by technical requirements, automate tests which 
+                are by itself served as a actual requirements to a software. <br><br>
+                
+                At second, organize your development process in the way to all 
+                your code which appears in your master branch pass through code 
+                review at least one team member and better a few more. In this 
+                way you would foster sharing of the project knowledge with 
+                others team members. <br><br>
+                
+                Finally, consider regular rotations of developers each two days 
+                among assigned tasks. It means two days we have been working one 
+                feature, after two days we switched with a colleague a tasks 
+                with each other, so everyone would know the whole codebase. 
+                There would not be a no one assigned to a single feature without 
+                much knowledge about the rest of the codebase. The import points 
+                are: <br> 
+                - tickets should be well prepared and be within epic tickets 
+                which define a whole feature of the product <br>
+                - engineers at the end of the work day or just before switch 
+                should perform a WIP (work-in-progress) commit of all their 
+                current work in the repo <br>
+                - switch between tasks should be made on different features, 
+                there is no much sense to make an exchange of tasks within 
+                the same feature. <br><br>
+                
+                The last technique is actively used by a 
+                <a href="https://gelassen.github.io/blog/2020/06/05/a-new-client.html">Pivotal Labs team</a>
             </div>
         </div>
         <h3>Government regulations of work with state companies which don't match well in the way how software projects should be developed and delivered</h3>
         <div>
             <h4>Issue</h4>
             <div>
-
+                - the client is a government company work with whom is specially 
+                regulated by a federal law to mitigate risks of corruption which 
+                brings restrictions on types of contract we could sign
+                - it does match well with a nature of custom software 
+                development and has negative impact on our ability to deliver a 
+                product
             </div>
             <h4>Solution</h4>
             <div>
+                The issue with changing requirements are known and even natural 
+                for software development. Even if all parties do an excellent 
+                work to clarify and write down all requirements and 
+                expectations, a few months later business environment will 
+                change which will lead to changes in requirements. <br><br>
+
+                The change in requirements is normal. What is not normal 
+                is an attempt to fit such kind of work in the boundaries of 
+                not an appropriate contract. <br><br>
+
+                I already shared earlier my view on a possible solution, but I 
+                would repeat it here in a separate paragraph to emphasize the 
+                importance of this -- it looks as a root cause of many troubles 
+                this projects faces. <br><br>
+
+                The industry developed set of practices (Agile, Scrum, Lean 
+                principles) to meet with such needs. 
+                <a href="https://savvycomsoftware.com/blog/common-it-contracts/">Dedicated team or time & materials</a> 
+                types of contracts should be used this, but the russian federal 
+                doesn't allow this. <br><br>
                 
+                It might sounds fun, but the lack of experience of working on 
+                projects with a corrupted client (the client who used this 
+                project to steal money) doesn't allow me to give a proper 
+                recommendation how to cope with this. However the following 
+                roadmap at the first perspective looks right: <br><br>
+
+                - initiate lobby of a new law which would better fit a nature 
+                of software development <br>
+                - meanwhile do your best to fit the reality of the custom 
+                software development into the existing forms of law regulations <br>
+                - do it by iterations where each iteration brings product 
+                closer to a final product <br>
+                - freeze change in requirements till the end of each 
+                iteration with following change of 
+                <a href="https://www.atlassian.com/agile/agile-at-scale/agile-iron-triangle">the scope, budget and deadline</a> <br>
+                - build mutually trusted relationships between all involving 
+                parties in the software delivery 
             </div>
         </div>
         
