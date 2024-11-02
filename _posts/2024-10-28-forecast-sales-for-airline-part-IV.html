@@ -21,26 +21,26 @@ modified_time: '2024-11-02'
             <p>
                  Project's goals gave our team a task regulary migrate data from 
                  one database to another, from one source of the data to a different 
-                 one. During work on the project several approaches had been used 
+                 one. During work on the project several approaches had been used. 
             </p>
             <p>
-                Read Kafka by specific criteria.  A separate service read the whole 
-                dataset stored and kafka and via filter on the client side process 
-                only required segment of the data. Also it becames possible to avoid 
+                Read Kafka by specific criteria. A separate service read the whole 
+                dataset stored in the Kafka and via filter on the client side process 
+                only required segment of the data. Also it becomes possible to avoid 
                 block of the main pipeline.  
             </p>
             <p>
                 Migrate data from CSV to Postgres database. A whole pipeline was built 
-                to support regilar migration of data from CSV in different formats to 
-                a currently confirmed in specification format to a set of database's 
-                tables.   
+                to support regular migration of data from CSV in different formats to 
+                to a set of database's tables in the format currently confirmed in 
+                the specification.   
             </p>
             <p>
-                Migrate data from Postgress to Posgress database. Dumping and 
+                Migrate data from Postgres to Posgress database. Dumping and 
                 restoring database is a known task, but when target database already 
                 has some data another approach should be used. A granular migrations 
                 of data across Postgres databases has caveats which were almost 
-                successfully overcomed  
+                successfully overcomed.  
             </p>
         </section>
         <section>
@@ -50,7 +50,7 @@ modified_time: '2024-11-02'
                 A part of the data had been requested for import were in csv files 
                 with size of near 100 Gb. Furthermore, this csv files agregated business 
                 data for different years where each year had its own format of the data. 
-                Therefore the requirements are find out the cost effective way to import 
+                Therefore requirements were find out the cost effective way to import 
                 data of such size and such diversity of structure with potential future 
                 request to scale it further.   
             </p>
@@ -70,7 +70,7 @@ modified_time: '2024-11-02'
             <h4>Postgres-to-Postgres migration</h4>
             <p>
                 In case of Postgres to Postgres migration it is possible to use backup 
-                and retore commands which gives dump of the database in the binary 
+                and restore commands which gives dump of the database in the binary 
                 format.  <br>
                 <pre>
                     $ pg_dump -U myuser -h localhost -F c -b -v -f mydb_backup.backup mydatabase
@@ -111,15 +111,15 @@ modified_time: '2024-11-02'
                 </pre> 
             </p>
             <p>
-                Adress space of primary and foreign keys of data which is going to be imported 
+                Address space of primary and foreign keys of data which is going to be imported 
                 could overlap ids of records which are already stored in the database. 
                 In this way ids should be adjusted to avoid such clash. <br><br>
                 
                 Max id of each table should be taken from the target database and records 
                 which are going to be imported should be updated by value which is diff between 
-                this MAX id and MIN id plus current id of the current record. This is a tedios 
+                this MAX id and MIN id plus current id of the current record. This tedios 
                 work could be done either over script code sql (preferable) or with help of awk 
-                command which might me an option for some cases. 
+                command which might be an option for some cases. 
             </p>
             <h4>Reading Kafka's data by segment pipeline</h4>
             <p>
@@ -129,19 +129,19 @@ modified_time: '2024-11-02'
             <p>
                 The solution offered by my colleague was to use a separate group 
                 to read Kafka history data. Kafka offers to reset data queue to 
-                start read data since begining and a separate group would not 
+                start read data since the beginning and a separate group would not 
                 block the main pipline. The filter on the consumer's side will 
                 speed up the process and process only required data. 
             </p>
             <p>
                 The important point is Kafka allows parallel reading of data only 
                 by partition: one partition - one consumer. To support parallel 
-                read of the data number of partitions should be equal or more a 
+                read of the data number of partitions should be equal or more to a 
                 number of consumers. <br>
                 Another valuable point is we can add new partitions at any time, 
-                but the data already upload in Kafka would not be rebalanced. 
+                but the data already has been uploaded in Kafka would not be rebalanced. 
                 Only data which has been upload after the point when new partition 
-                were added would be available for read by from all this partitions.  
+                were added would be available for read from all this partitions.  
             </p>
             <h4>Existing ETL solutions</h4>
             <p>
@@ -151,7 +151,7 @@ modified_time: '2024-11-02'
                 Indeed it is. Quick research of existing solutions on the market shown 
                 Apache NiFi as a promisng candidate. However, isolated network of the 
                 customer makes its application limited. Its potential should be explored 
-                in a future projects.   
+                in future projects.   
             </p>
         </section>
 
