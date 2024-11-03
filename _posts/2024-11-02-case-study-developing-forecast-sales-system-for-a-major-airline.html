@@ -4,7 +4,7 @@ title: 'Case study: developing forecast sales system for a major airline'
 date: '2024-11-02'
 author: Gelassen
 tags: 
-modified_time: '2024-11-02'
+modified_time: '2024-11-03'
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +26,7 @@ modified_time: '2024-11-02'
             </p>
             <p>
                 The first version of the the system had been delivered and presented 
-                to stakeholders. Propotype on the subset of product data overbit 
+                to stakeholders. Propotype on the subset of product data exceeded results 
                 existing solutions on the market.  
             </p>
             <p>
@@ -70,7 +70,7 @@ modified_time: '2024-11-02'
             <p>
                 Our goal was to replace Sabre on Russian market and use all 
                 existing achievements in math and airline's business domain to create 
-                even more superior system.    
+                superior system.    
             </p>
         </section>
         <section>
@@ -87,6 +87,9 @@ modified_time: '2024-11-02'
                     for a flight stream. The project is based on Kafka, Kafka Connect 
                     and PostgreSQL with a REST server in Python. Everything is 
                     containerized in Docker and deployed via Docker Compose.
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/05/18/case-study-building-kafka-kafka_connect-postgres-data-pipeline.html">Docker-based Kafka - Kafka Connect - PostgreSQL pipeline with automatic export data from queue to database with REST server on Python to read this data. Intended for needs of the airline.</a>
                 </p>
                 <h4>Business Analysis</h4>
                 <p>
@@ -147,7 +150,10 @@ modified_time: '2024-11-02'
                         </li>
                     </ul>
                 </p>
-                <h4>Raising the level of development to world standards</h4>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/07/29/forecast-sales-for-airline-part-III.html">Forecast sales system for an airline company, part III: overcoming organization and management challenges</a>
+                </p>
+                <h4>Raising the level of development to the world standards</h4>
                 <p>
                     <ul>
                         <li>
@@ -264,10 +270,14 @@ modified_time: '2024-11-02'
                         </li>
 
                         <li>
-                            the work was not completed due to the customer 
+                            The work was not completed due to the customer 
                             changing priorities and excluding it from deliveries
                         </li>
                     </ul>
+
+                    <p>
+                        To read further: <a href="https://gelassen.github.io/blog/2024/07/20/forecast-sales-for-airline-part-II.html">Forecast sales system for an airline company, part II: service forecasting bookings by ML</a>
+                    </p>
                 </p>
                 <h4>Database optimization</h4>
                 <p>
@@ -283,6 +293,9 @@ modified_time: '2024-11-02'
                             according to the set priorities)
                         </li>
                     </ul>
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/06/17/forecast-sales-for-airline-part-I-working-with-one-billion-records.html">Forecast sales system for an airline company, part I: working with one billion records</a>
                 </p>
                 <h4>Data migration</h4>
                 <p>
@@ -305,6 +318,9 @@ modified_time: '2024-11-02'
                             the most resource-intensive parts of this task
                         </li>
                     </ul>
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/10/28/forecast-sales-for-airline-part-IV.html">Forecast sales system for an airline company, part IV: data migrations</a>
                 </p>
                 <h4>Message Queue (MQ) module</h4>
                 <p>
@@ -360,7 +376,136 @@ modified_time: '2024-11-02'
         <section>
             <h3>Solution</h3>
             <p>
-                <!-- TODO: complete me -->
+                <p>
+                    Developed solution is just a part of much bigger and more 
+                    sophisticated system. What it does is receive data about 
+                    bookings in real time and update forecasts which are later 
+                    available over the REST or passed over Kafka to the most 
+                    critical parts of the system. 
+                </p>
+                <p>
+                    The company has different types of sales proposals. Depending 
+                    on current ratio between demand and offer it opens one or 
+                    another sales proposal with final goal fulfill the whole 
+                    capacity of the jet and maximize revenue. Forecasts which are 
+                    made by the system gives recommendation to another part of 
+                    the system which sales proposal to open right now.  
+                </p>
+                <p>
+                    Forecasts heavily rely on the historic data about passed 
+                    bookings, but for not more than one year. Experiments shown more 
+                    longer trend becomes less effective, because market situaton 
+                    year-to-year changes significantly which makes older data 
+                    outdated.
+                </p>
+                <p>
+                    System recognises trends and seasons -- growth or decline in 
+                    orders for a period of time. System distinguish different periods 
+                    of bookings and adjust algorithms of foreacasts according to 
+                    them. System covers corners cases and exceptional situations 
+                    and adjust sales to meet finals goals.  
+                </p>
+                <p>
+                    As a whole, system elegantly adjust sales prices to a current 
+                    demand. 
+                </p>
+                <h4>Main components</h4>
+                <p align="center">
+                    <img src="/blog/assets/images/2024-07-20/main-components.png" width="100%"/>
+                </p> 
+                <h4>The math module</h4>
+                <p>
+                    <p>
+                        The math module is the core of the system which has been developing 
+                        for passed two years. Initially made on R it had been ported on 
+                        python.  
+                    </p>
+                    <p>
+                        The prototype on R which leverages this math module shown 10x 
+                        better results compare to the Sabre.  
+                    </p>
+                    <p>
+                        Unfortunately, I could not say more - this part of the system is 
+                        under NDA of my customer.
+                    </p>
+                </p>
+                <h4>Kafka as a single source of data</h4>
+                <p>
+                    Variety of customer's sources of bookings comes to our system 
+                    over Kafka. This stream of inventory data is near 100 Mb per 
+                    second (!) processed by our system. 
+                </p>
+                <h4>Message Queue (MQ)</h4>
+                <p>
+                    Our MQ is service on Python which reads inventory data from 
+                    Kafka and scaled up over docker containers to meet with 
+                    growing flow of the data. 
+                </p>
+                <p>
+                    Further MQ disassembles inventory messages on different business 
+                    domain objects and put into associated tables in database. This 
+                    process doesn't take longer rather than 0.5 second. 
+                </p>
+                <p>
+                    Based on information in a new inventory message and current 
+                    state of the model, on the MQ level a special object is 
+                    generated to be processed futher. We call it action. 
+                </p>
+                <h4>Math Forecast module</h4>
+                <p>
+                    Another container with forecast logic long polling database 
+                    for upcoming new actions generated by MQ. Based on type of 
+                    an action, forecast module initate one of four possible steps.
+                </p>
+                <p>
+                    Unfortunately, I could not say more as this part of the system 
+                    is under NDA of my client. Results of a forecast are put into 
+                    database and the most critical part of this results send back 
+                    to the client immediately.   
+                </p>
+                <h4>ML module</h4>
+                <p>
+                    In parallel to the math forecast module ML forecast module 
+                    should be run as well. It leverages 10 000 precalculated 
+                    ML models which recevies historics bookins as input and 
+                    gives forecast as output. Later this data should be 
+                    compared with forecast made by classic math and better 
+                    estimate should be returned back to the client. Team assumed 
+                    in some periods of sales it might give better result rather 
+                    than classic math. 
+                </p>
+                <p>
+                    Due increased scope and limits of the budget the ML module 
+                    has been crossed out from the current delivery three months 
+                    ago.
+                </p>
+                <h4>Maintenance and history databases</h4>
+                <p>
+                    Currently systems stores 600 000 000 records. Search over 
+                    such amount of data is challenging and with growth of data 
+                    situation will be even more difficult. Because at least half 
+                    of this data is historic, it makes sense to move it into 
+                    a separate database to improve query performance. 
+                </p>
+                <p>
+                    Another potential boost in performance could be achieved 
+                    over partitioning database by month and may by markets. 
+                    Queries are extensively uses date ranges, so skipping out 
+                    dataset out of required date range could give 10x boost to 
+                    the performance. This task is partly implemented and stays 
+                    in the backlog for a future scope. 
+                </p>
+                <h4>REST API</h4>
+                <p>
+                    Current customer goal is visualise booking dynamic and 
+                    forecasts in sales on graphics to give maximum infromation 
+                    to analytics and sellers. For this aim REST API has been 
+                    prepared and deployed.
+                </p>
+                <p>
+                    However, in future I see potential to automatically open 
+                    a sales offer without introducing a man into this process.
+                </p>
             </p>
         </section>
         

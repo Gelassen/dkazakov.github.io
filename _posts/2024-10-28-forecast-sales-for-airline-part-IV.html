@@ -4,7 +4,7 @@ title: 'Forecast sales system for an airline company, part IV: data migrations'
 date: '2024-10-28'
 author: Gelassen
 tags: 
-modified_time: '2024-11-02'
+modified_time: '2024-11-03'
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +21,16 @@ modified_time: '2024-11-02'
             <p>
                  Project's goals gave our team a task regulary migrate data from 
                  one database to another, from one source of the data to a different 
-                 one. During work on the project several approaches had been used. 
+                 one.  
+            </p>
+            <p>
+                Some numbers: <br><br>
+
+                ~70-100 Gb of data, 100 000 000 records per table, a few days to 
+                migrate 5% of the data
+            </p>
+            <p>
+                During work on the project several approaches had been used.
             </p>
             <p>
                 Read Kafka by specific criteria. A separate service read the whole 
