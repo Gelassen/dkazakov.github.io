@@ -1,0 +1,523 @@
+---
+layout: post
+title: 'Case study: developing forecast sales system for a major airline'
+date: '2024-11-02'
+author: Gelassen
+tags: 
+modified_time: '2024-11-03'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forecast Sales System for Airline - Part IV</title>
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Executive summary</h3>
+            <p>
+                Within a team I developed an automatic sales system for a undisclosed airline 
+                company to replace Sabre. System uses an innovative math model to predict 
+                demand and open different sets of offers for sale to maximize revenue and 
+                amount of passengers to transfer.  
+            </p>
+            <p>
+                The first version of the the system had been delivered and presented 
+                to stakeholders. Propotype on the subset of product data exceeded results 
+                of existing solutions on the market.  
+            </p>
+            <p>
+                The core of the system is an innovative math model which is under 
+                NDA of my client.
+            </p>
+            <p>
+                Engineering team was responsible for building infrastructure 
+                and implementing math models in code. System includes: <br>
+                <ul>
+                    <li>The sources of inventory messages which comes over Kafka</li>
+                    <li>Message Queue module of the system</li>
+                    <li>Math forecast module of the system</li>
+                    <li>ML model of the system</li>
+                    <li>Postgres databases with over one billion records</li>
+                </ul>
+            </p>
+            <p>
+                Project required from me a cross-displinary knowledge from variety of 
+                different fields from business analysis to delivery management. <br><br>
+                
+                Tech stack and skills: <br>
+                Python - Pytest - MyPy - Pydantic - SQLAlchemy - Asyncio - SQL - Postgres 
+                - Math - ML - Docker products - Kafka - Business Analysis 
+                - Project Management - Delivery Management - Database Optimization 
+                - Data Migration   
+            </p>
+        </section>
+        <section>
+            <h3>The customer</h3>
+            <p>
+                Worldwide airline company with headquarter in Russia
+            </p>
+        </section>
+        <section>
+            <h3>The problem</h3>
+            <p>
+                Due increased tensions in the political fields part of the western 
+                companies left Russian market. It created a demand for new products. 
+            </p>
+            <p>
+                Our goal was to replace Sabre on Russian market and use all 
+                existing achievements in math and airline's business domain to create 
+                superior system.    
+            </p>
+        </section>
+        <section>
+            <h3>Technical and management challenges</h3>
+            <p>
+                <h4>Test task</h4>
+                <p>
+                    Before starting work and signing the contract, a test task was 
+                    implemented to confirm the customer's team's skills in the 
+                    technologies used in the project.
+                </p>
+                <p>
+                    The test project is a Proof-of-concept (PoC) of a data pipeline 
+                    for a flight stream. The project is based on Kafka, Kafka Connect 
+                    and PostgreSQL with a REST server in Python. Everything is 
+                    containerized in Docker and deployed via Docker Compose.
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/05/18/case-study-building-kafka-kafka_connect-postgres-data-pipeline.html">Docker-based Kafka - Kafka Connect - PostgreSQL pipeline with automatic export data from queue to database with REST server on Python to read this data. Intended for needs of the airline.</a>
+                </p>
+                <h4>Business Analysis</h4>
+                <p>
+                    <ul>
+                        <li>errors in the specification were found and corrected</li>
+                        <li>
+                            a lot of things not described in the specification were 
+                            clarified and agreed upon with mathematicians, ML specialists, 
+                            colleagues from another customer's team (work in this direction was 
+                            carried out throughout the project on a weekly basis)
+                        </li>
+                        <li>
+                            functionality requirements were formalized at the ticket level 
+                            in CRM with a description of use cases (User stories) and 
+                            technical comments on the implementation
+                        </li>
+                    </ul>
+                </p>
+                <h4>Managerial functions</h4>
+                <p>
+                    <ul>
+                        <li>
+                            requirements for functionality were clarified and 
+                            formalized at the ticket level in CRM
+                        </li>
+                        <li>
+                            requests for changes to requirements began to be 
+                            recorded at the ticket level in the backlog
+                        </li>
+                        <li>
+                            each call began to be accompanied by minutes: a 
+                            recorded list of clarified issues and agreements 
+                            reached
+                        </li>
+                        <li>
+                            regular demonstration of the developed functionality 
+                            to the client and feedback collection
+                        </li>
+                        <li>
+                            change management in requirements according to the 
+                            "iron triangle" of requirements management was 
+                            introduced into the project (partially implemented)
+                        </li>
+                        <li>
+                            systematic work was carried out to transfer the project 
+                            work to a number of best practices and processes so 
+                            that the success of the project was not tied only to 
+                            the personal heroism of each of its participants, 
+                            but was steadily and systematically achieved through a 
+                            number of practices and methods, minimizing known 
+                            risks
+                        </li>
+                        <li>
+                            definition of key project stakeholders and building 
+                            regular communication with them: requirements collection, 
+                            regular demonstration of results, feedback collection 
+                            (the task is not completed)
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/07/29/forecast-sales-for-airline-part-III.html">Forecast sales system for an airline company, part III: overcoming organization and management challenges</a>
+                </p>
+                <h4>Raising the level of development to the world standards</h4>
+                <p>
+                    <ul>
+                        <li>
+                            insistence on preparing comprehensive documentation 
+                            on application deployment
+                        </li>
+                        <li>
+                            eliminated the situation of a broken master 
+                            (application code always ready to be shown to the 
+                            client): <br>
+                            <ul>
+                                <li>closing the master branch for direct recording</li>
+                                <li>
+                                    switching to working with code via Pull Requests 
+                                    (PR) in the git-flow process
+                                </li>
+                                <li>
+                                    switching to working with code in separate branches 
+                                    in the git-flow process
+                                </li>
+                                <li>
+                                    regular code review by other team members
+                                </li>
+                                <li>
+                                    writing and running tests before each PR merge 
+                                    into the master branch
+                                </li>
+                                <li>
+                                    proposed raising Continues Integration\Continues 
+                                    Deployment (CI\CD) on the project (not implemented 
+                                    due to high workload and work on higher-priority 
+                                    tasks)
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            introduced the practice of covering the delivered 
+                            functionality with integration and unit tests
+                        </li>
+                        <li>
+                            transferred the project from a procedural programming 
+                            style to an object-oriented approach
+                        </li>
+                        <li>
+                            introduced architectural approaches that allow scaling 
+                            and maintaining the system
+                        </li>
+                        <li>
+                            a proposal was made on options for overcoming the 
+                            unavailability of key software (docker) due to political 
+                            risks
+                        </li>
+                        <li>
+                            a proposal was made to increase the security of the 
+                            system being developed - resistance to hacking and 
+                            thereby reduce the risk of significant losses for 
+                            the customer
+                        </li>
+                    </ul>
+                    A lot of work has been done in this area, but many similar 
+                    tasks are also awaiting their turn according to priorities.
+                </p>
+                <h4>ML module</h4>
+                <p>
+                    <ul>
+                        <li>
+                            the subject area was analyzed, project knowledge was 
+                            adopted
+                        </li>
+                        <li>
+                            a model for working with the ML team was built
+                        </li>
+                        <li>
+                            a market analysis of possible solutions for 
+                            versioning ML models was conducted
+                        </li>
+                        <li>
+                            ML models were integrated into the main project
+                        </li>
+                        <li>
+                            problems with huge amounts of data were solved
+                        </li>
+                        <li>
+                            parallelization problems were solved
+                        </li>
+                        <li>
+                            problems with the lack of static typing in Python 
+                            were solved
+                        </li>
+                        <li>
+                            a system module was developed that:
+                            <ul>
+                                <li>
+                                    collects and aggregates data for the model 
+                                    input
+                                </li>
+                                <li>
+                                    selects the appropriate model
+                                </li>
+                                <li>
+                                    runs the model for each flight and saves the 
+                                    result to the database
+                                </li>
+                                <li>
+                                    covered by tests that verify its operation
+                                </li>
+                                <li>
+                                    packed in a Docker container
+                                </li>
+                                <li>
+                                    runs periodically according to the schedule
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            The work was not completed due to the customer 
+                            changing priorities and excluding it from deliveries
+                        </li>
+                    </ul>
+
+                    <p>
+                        To read further: <a href="https://gelassen.github.io/blog/2024/07/20/forecast-sales-for-airline-part-II.html">Forecast sales system for an airline company, part II: service forecasting bookings by ML</a>
+                    </p>
+                </p>
+                <h4>Database optimization</h4>
+                <p>
+                    <ul>
+                        <li>
+                            optimized work with the database so that a large 
+                            volume of data does not interfere with development
+                        </li>
+                        <li>
+                            proposals were made that should ensure the speed of 
+                            work with the database by 10 times (not implemented 
+                            due to high workload and work on other tasks 
+                            according to the set priorities)
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/06/17/forecast-sales-for-airline-part-I-working-with-one-billion-records.html">Forecast sales system for an airline company, part I: working with one billion records</a>
+                </p>
+                <h4>Data migration</h4>
+                <p>
+                    Data migration was carried out regularly:
+                    <ul>
+                        <li>knowledge on this part of the system was adopted</li>
+                        <li>requirements were collected and clarified</li>
+                        <li>functionality was added/corrected to meet new requirements</li>
+                        <li>requested data was selected from csv</li>
+                        <li>data was passed through our pipeline</li>
+                        <li>
+                            converted data was exported to an sql script, ready 
+                            for import on the customer's side
+                        </li>
+                        <li>
+                            data was imported into the system on the customer's side
+                        </li>
+                        <li>
+                            shell scripts and daemon tasks were developed, automating 
+                            the most resource-intensive parts of this task
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    To read further: <a href="https://gelassen.github.io/blog/2024/10/28/forecast-sales-for-airline-part-IV.html">Forecast sales system for an airline company, part IV: data migrations</a>
+                </p>
+                <h4>Message Queue (MQ) module</h4>
+                <p>
+                    The MQ module has been improved/rewritten to meet new requirements:
+                    <ul>
+                        <li>the system has been refactored</li>
+                        <li>a new data model has been implemented</li>
+                        <li>
+                            a layer for working with the database has been 
+                            implemented
+                        </li>
+                        <li>
+                            business logic for processing new messages has 
+                            been implemented
+                        </li>
+                        <li>
+                            tests have been implemented that verify the 
+                            operation of the system
+                        </li>
+                        <li>
+                            additional message filters and tests that check 
+                            their operation have been implemented
+                        </li>
+                        <li>
+                            the module has been packed into a Docker container
+                        </li>
+                    </ul>
+                </p>
+                <h4>Math Forecast module</h4>
+                <p>
+                    The Math Forecast module has been extended:
+                    <ul>
+                        <li>knowledge on this part of the system has been adopted</li>
+                        <li>system refactoring has been carried out</li>
+                        <li>knowledge on the mathematical logic of the system has been adopted</li>
+                        <li>data models and data converters have been implemented</li>
+                        <li>a layer for working with a data source has been implemented</li>
+                        <li>
+                            business logic for initialization and booking event 
+                            handlers has been implemented
+                        </li>
+                        <li>
+                            part of the unit and integration tests that verify the 
+                            operation of the system have been implemented
+                        </li>
+                        <li>
+                            the module is packed into a Docker container
+                        </li>
+                    </ul>
+                </p>
+            </p>
+        </section>
+        <section>
+            <h3>Solution</h3>
+            <p>
+                <p>
+                    Developed solution is just a part of much bigger and more 
+                    sophisticated system. What it does is receive data about 
+                    bookings in real time and update forecasts which are later 
+                    available over the REST or passed over Kafka to the most 
+                    critical parts of the system. 
+                </p>
+                <p>
+                    The company has different types of sales proposals. Depending 
+                    on current ratio between demand and offer it opens one or 
+                    another sales proposal with final goal to fulfill the whole 
+                    capacity of a jet and maximize a revenue. Forecasts which are 
+                    made by the system give recommendation to another part of 
+                    the system which sales proposal to open right now.  
+                </p>
+                <p>
+                    Forecasts heavily rely on the historic data about passed 
+                    bookings, but for not more than one year. Experiments shown more 
+                    longer trend becomes less effective, because market situaton 
+                    year-to-year changes significantly which makes older data 
+                    outdated.
+                </p>
+                <p>
+                    System recognises trends and seasons -- growth or decline in 
+                    orders for a period of time. System distinguish different periods 
+                    of bookings and adjust algorithms of foreacasts according to 
+                    them. System covers corners cases and exceptional situations 
+                    and adjust sales to meet finals goals.  
+                </p>
+                <p>
+                    As a whole, system elegantly adjust sales prices to a current 
+                    demand. 
+                </p>
+                <h4>Main components</h4>
+                <p align="center">
+                    <img src="/blog/assets/images/2024-07-20/main-components.png" width="100%"/>
+                </p> 
+                <h4>The math module</h4>
+                <p>
+                    <p>
+                        The math module is the core of the system which has been developing 
+                        for passed two years. Initially made on R it had been ported on 
+                        python.  
+                    </p>
+                    <p>
+                        The prototype on R which leverages this math module shown 10x 
+                        better results compare to the Sabre.  
+                    </p>
+                    <p>
+                        Unfortunately, I could not say more - this part of the system is 
+                        under NDA of my customer.
+                    </p>
+                </p>
+                <h4>Kafka as a single source of data</h4>
+                <p>
+                    Variety of customer's sources of bookings comes to our system 
+                    over Kafka. This stream of inventory data is near 100 Mb per 
+                    second (!) processed by our system. 
+                </p>
+                <h4>Message Queue (MQ)</h4>
+                <p>
+                    Our MQ is service on Python which reads inventory data from 
+                    Kafka and scaled up over docker containers to meet with 
+                    growing flow of the data. 
+                </p>
+                <p>
+                    Further MQ disassembles inventory messages on different business 
+                    domain objects and put into associated tables in database. This 
+                    process doesn't take longer rather than 0.5 second. 
+                </p>
+                <p>
+                    Based on information in a new inventory message and current 
+                    state of the model, on the MQ level a special object is 
+                    generated to be processed futher. We call it action. 
+                </p>
+                <h4>Math Forecast module</h4>
+                <p>
+                    Another container with forecast logic long polling database 
+                    for upcoming new actions generated by MQ. Based on type of 
+                    an action, forecast module initate one of four possible steps.
+                </p>
+                <p>
+                    Unfortunately, I could not say more as this part of the system 
+                    is under NDA of my client. Results of a forecast are put into 
+                    database and the most critical part of this results send back 
+                    to the client immediately.   
+                </p>
+                <h4>ML module</h4>
+                <p>
+                    In parallel to the math forecast module ML forecast module 
+                    should be run as well. It leverages 10 000 precalculated 
+                    ML models which recevies historics bookins as input and 
+                    gives forecast as output. Later this data should be 
+                    compared with forecast made by classic math and better 
+                    estimate should be returned back to the client. Team assumed 
+                    in some periods of sales it might give better result rather 
+                    than a classic math. 
+                </p>
+                <p>
+                    Due increased scope and limits of the budget the ML module 
+                    has been crossed out from the current delivery three months 
+                    ago.
+                </p>
+                <h4>Maintenance and history databases</h4>
+                <p>
+                    Currently systems stores 600 000 000 records. Search over 
+                    such amount of data is challenging and with growth of data 
+                    situation will be even more difficult. Because at least half 
+                    of this data is historic, it makes sense to move it into 
+                    a separate database to improve query performance. 
+                </p>
+                <p>
+                    Another potential boost in performance could be achieved 
+                    over partitioning database by month and may be by markets. 
+                    Queries are extensively uses date ranges, so skipping out 
+                    dataset out of required date range could gives 10x boost to 
+                    the performance. This task is partly implemented and stays 
+                    in the backlog for a future scope. 
+                </p>
+                <h4>REST API</h4>
+                <p>
+                    Current customer goal is visualise booking dynamic and 
+                    forecasts in sales on graphics to give maximum infromation 
+                    to analytics and sellers. For this aim REST API has been 
+                    prepared and deployed.
+                </p>
+                <p>
+                    However, in future I see potential to automatically open 
+                    a sales offer without introducing a man into this process.
+                </p>
+            </p>
+        </section>
+        
+        <br><br>
+
+        <h4>Related publications:</h4>
+        <ul>
+            <li><a href="https://gelassen.github.io/blog/2024/10/28/forecast-sales-for-airline-part-IV.html">Forecast sales system for an airline company, part IV: data migrations</a></li>
+            <li><a href="https://gelassen.github.io/blog/2024/07/29/forecast-sales-for-airline-part-III.html">Forecast sales system for an airline company, part III: overcoming organization and management challenges</a></li>
+            <li><a href="https://gelassen.github.io/blog/2024/07/20/forecast-sales-for-airline-part-II.html">Forecast sales system for an airline company, part II: service forecasting bookings by ML</a></li>
+            <li><a href="https://gelassen.github.io/blog/2024/06/17/forecast-sales-for-airline-part-I-working-with-one-billion-records.html">Forecast sales system for an airline company, part I: working with one billion records</a></li>
+            <li><a href="https://gelassen.github.io/blog/2024/05/18/case-study-building-kafka-kafka_connect-postgres-data-pipeline.html">Docker-based Kafka - Kafka Connect - PostgreSQL pipeline with automatic export data from queue to database with REST server on Python to read this data. Intended for needs of the airline.</a></li>
+        </ul>
+    </article>
+</body>
