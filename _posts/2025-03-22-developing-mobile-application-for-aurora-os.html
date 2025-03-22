@@ -95,8 +95,21 @@ modified_time: '2025-03-22'
             <h3>General architecture</h3>
             <p>
                 <h4>Project structure</h4>
-                <p align="center">
-                    <img src="/blog/assets/images/2025-03-01/project-structure.png" width="100%"/>
+                <p>
+                    <ul>
+                        <li><strong>icons/</strong> - Contains the application icons for various screen resolutions.</li>
+                        <li><strong>qml/</strong> - Contains the QML source code and UI resources.</li>
+                        <li><strong>cover/</strong> - Contains the application cover implementations.</li>
+                        <li><strong>pages/</strong> - Contains the application pages.</li>
+                        <li><strong>translations/</strong> - Contains the UI translation files.</li>
+                        <li><strong>src/</strong> - Contains the C++ source code for the application.</li>
+                        <li><strong>rpm/</strong> - Contains the rpm-package build settings and scripts.</li>
+                        <li><strong>ApplicationTemplate.pro</strong> - This is the project file for the <code>qmake</code> build system. It describes the project structure and configurations.</li>
+                        <li><strong>ApplicationTemplate.qml</strong> - This file contains the application window implementation written in QML.</li>
+                        <li><strong>main.cpp</strong> - The entry point for the application written in C++.</li>
+                        <li><strong>ApplicationTemplate.spec</strong> - This file is used by the <code>rpmbuild</code> tool to build the RPM package.</li>
+                        <li><strong>ApplicationTemplate.desktop</strong> - Defines the display and parameters for launching the application.</li>
+                    </ul>
                 </p> 
                 <p>
                     The main developing language for Aurora OS is a C++, so a project would have 
@@ -305,7 +318,7 @@ modified_time: '2025-03-22'
             </p>
         </section>
 
-        <h4>Related publications:</h4>
+        Related publications:
         <ul>
             <a href="https://gelassen.github.io/blog/2020/06/05-how-we-work.html">How we work</a>
         </ul>
