@@ -1,0 +1,312 @@
+---
+layout: post
+title: 'Developing mobile application for Aurora OS'
+date: '2025-03-22'
+author: Gelassen
+tags: 
+modified_time: '2025-03-22'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developing mobile application for Aurora OS, part I: general architecture</title>
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Executive summary</h3>
+            <p>
+                A first version of the voting system has been developed and delivered to the 
+                client for the first launch in the production next week.  
+            </p>
+            <p>
+                The client is a university from Top-12 universities of Russia is interested to 
+                replace BOSH system to conduct voting inside the university. Key requirements are 
+                to keep it private and secure and to meet with Russian law regarding foreign 
+                solution replacement in the state own enterprises.   
+            </p>
+            <p>
+                Solution that has been developed is client-server application with blockchain to 
+                store votes and mobile client based on national mobile OS with access to the system 
+                by personal ID cards (nfc). 
+            </p>
+            <p>
+                Technologies: Aurora OS - C++ - Qt - NFC - Python - Pydantic - SQLAlchemy - HTML - JS - REST - 
+                JSON - Git - GitLab - Hyperledger - Redis - Postgres - WebSocket
+            </p>
+            <p>
+                Publication below covers the basics of developing mobile application for Aurora OS. 
+                This is a relatively new platform that's get boost in potential market share due 
+                tensions between Russia and the West.
+            </p>
+            <h3>The intro</h3>
+            <p>
+                Request of my current customer is to perform polls in-house based on 
+                solutions authorized by the Russian government. In terms of mobile devices 
+                tablets on Aurora are solely solution for this. 
+            </p>
+            <p>
+                Aurora OS is based on Sailfish OS and has been developing by Russian 
+                company <a href="https://www.omp.ru">OMP</a> <br><br>
+
+                <blockquote>
+                    The Aurora platform (formerly known as Sailfish Mobile OS RUS) has been in development since 2016.<br><br>
+                    This year, the Russian company Open Mobile Platform (OMP) received the rights to refine and adapt the Finnish Sailfish OS for use in Russia. Aurora began to develop as an operating system aimed at corporate and government customers, with an emphasis on information security.
+                </blockquote>
+            </p>
+            <p>
+                Tech stack is quite new and just experience uprising by emerging markets caused 
+                by tensions between Russia and USA and necessity to secure Russian positions 
+                in the all critical spheres. 
+            </p>
+            <p>
+                In this perspective the short term goal is to deliver a new solution 
+                for my customer, but the long term goal is to develop expertise in this 
+                new platform to offer upcoming potential customers. 
+            </p>
+        </section>
+        <section>
+            <h3>Motivation</h3>
+            <p>
+                Back in the USSR there was a joke that Russian engineers can build a plasma gun 
+                from a refrigerator. However, on the West dual-use technologies are also not 
+                uncommon.  
+            </p>
+            <p>
+                Twitter is positioned itself as short messaging system for a casual communications. 
+                However, he played a crucial role in revolutions in Middle East and North Africa 
+                called "Arabian spring". The mobile game "Pokemon Go" might looks like just an 
+                entertainment for teens, but at first opening in creates three photos of the space 
+                around and sends its back to the server which is used to gather up-to-date maps of 
+                the whole world. Reward system of the 'game' could push players to physical locations 
+                unavailable for satellites and spies.   
+            </p>
+            <p>
+                The modern mobile phone with its sound record, geo position, accelerometer data and 
+                video record is powerful spy tool in a pocket of almost every citizen. It is important 
+                to mitigate risks associated with this. The full autarky is achieved over self production 
+                of hardware, software and Big Data and own mobile OS is one of the steps towards this.    
+            </p>
+        </section>
+        <section>
+            <h3>General architecture</h3>
+            <p>
+                <h4>Project structure</h4>
+                <p align="center">
+                    <img src="/blog/assets/images/2025-03-01/project-structure.png" width="100%"/>
+                </p> 
+                <p>
+                    The main developing language for Aurora OS is a C++, so a project would have 
+                    a classic C++ separation on headers and implementation files. 
+                </p>
+                <p>
+                    The interface is developed with a help of QML and stored in a separate folder. 
+                </p>
+                <p>
+                    Others folders includes projects images, translation files and build artifacts. 
+                    A special note for a .pro file -- it covers configuration for a project.
+                </p>
+                <h4>Entry point</h4>
+                <p>
+                    Files main.cpp and <project_name>.qml serves as an entry point into the app. 
+                    Main.cpp register all necessary objects and qml files gives a reference to 
+                    the first screen.  
+                    <pre>
+                        int main(int argc, char *argv[])
+                        {
+                            QScopedPointer<QGuiApplication> application(Aurora::Application::application(argc, argv));
+                            application->setOrganizationName(QStringLiteral("ru.fa"));
+                            application->setApplicationName(QStringLiteral("Voting"));
+
+                            qRegisterMetaType<PollViewItem>("PollViewItem");
+                            qRegisterMetaType<PollQuestion>("PollQuestion");
+                            qRegisterMetaType<PollQuestion*>("PollQuestion*");
+
+                            QScopedPointer<SharedData> sharedData(new SharedData());
+                            sharedData.data()->setParent(nullptr);
+                            QScopedPointer<OptionsAdapterViewModel> adapterViewModel(new OptionsAdapterViewModel());
+                            QScopedPointer<AuthViewModel> authViewModel(new AuthViewModel(sharedData.data()));
+                            QScopedPointer<PollsViewModel> pollsViewModel(new PollsViewModel(sharedData.data()));
+                            
+                            // the rest of the code
+                        }
+                    </pre>
+                </p>
+                <h4>View - ViewModel - Model</h4>
+                <p align="center">
+                    <img src="/blog/assets/images/2025-03-01/general-mobile-client-architecture-diagram.png" width="100%"/>
+                </p> 
+                <p>
+                    I have not noticed any architecture pattern in publicly available Aurora OS projects, 
+                    so I introduced a modern architecture which I used in Android projects. 
+                </p>
+                <p>
+                    It is know as a Clean Architecture, but basically it is a result of following key engineering 
+                    the best practices: single responsibility principle, low coupling, dependency inversion. ChatGpt 
+                    gives such more detailed explanation:
+                </p>
+                <p>
+                    <p>
+                        <strong>Clean Architecture</strong> is a software design philosophy that emphasizes 
+                        <strong>separation of concerns</strong>, <strong>maintainability</strong>, and <strong>testability</strong>. 
+                        It is a result of following key engineering best practices, such as:
+                    </p>
+                    <ul>
+                        <li><strong>Single Responsibility Principle (SRP):</strong> Each module should have one reason to change.</li>
+                        <li><strong>Low Coupling:</strong> Components should depend on abstractions rather than concrete implementations.</li>
+                        <li><strong>Dependency Inversion Principle (DIP):</strong> High-level modules should not depend on low-level modules; both should depend on abstractions.</li>
+                    </ul>
+                
+                    <h2>Additional Key Aspects of Clean Architecture:</h2>
+                    <ul>
+                        <li>
+                            <strong>Layered Structure:</strong> Clean Architecture divides software into well-defined layers, typically:
+                            <ul>
+                                <li><strong>Entities:</strong> Core Business Logic</li>
+                                <li><strong>Use Cases:</strong> Application Logic</li>
+                                <li><strong>Interface Adapters:</strong> Controllers, Presenters, Gateways</li>
+                                <li><strong>Frameworks & Drivers:</strong> External Systems, DB, UI, etc.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Independence from External Frameworks:</strong> The core business logic does not depend on external databases, UI frameworks, or third-party tools.</li>
+                        <li><strong>Testability:</strong> Since business logic is isolated from external dependencies, it is easy to write unit tests.</li>
+                        <li><strong>Flexibility & Maintainability:</strong> Changing frameworks (e.g., switching from PostgreSQL to MongoDB) or replacing external APIs does not affect the core business rules.</li>
+                    </ul>
+                </p>
+                <p>
+                    In the foundation of the app there is a model of data. It might be cached in storage or requested 
+                    from network and operated directly -- this is the core of application. The next layer is 
+                    business logic implemented as UseCases. They encapsulates all necessary specific 
+                    transformations and operations on the data. The next layer if a ViewModel which connect 
+                    UI layer defined in QMl with data passed through business rules of the use cases.    
+                </p>
+                <h4>Signal-slot mechanism</h4>
+                <p>
+                    Similar to broadcast messages I first met in 2010 in Android, C++ & Qt offers low coupled 
+                    mechanism to connect two parts of the code from different layers. Interestingly is that 
+                    signal-slot mechanism had been developed back in 1995 and inspired event driving 
+                    programming itself!
+                </p>
+                <p>
+                    <pre>
+                        signals:
+                            void requestFinished(const QString &response, const RequestId requestId);
+                            void requestError(const QString &error, const RequestId requestId);
+
+                        private slots:
+                            void onReplyFinished(QNetworkReply *reply);
+                    </pre>
+                    You defined signals as a member fields and after it 'connect' them with each other 
+                    <pre>
+                        connect(m_networkManager, &QNetworkAccessManager::finished, this, &NetworkManager::onReplyFinished);
+                    </pre>  
+                </p>
+                <p>
+                    In this way emitting signal 'finished' would trigger 'onReplyFinished' finished slot 
+                    and associated with it logic.
+                </p>
+            </p>
+        </section>
+        <section>
+            <h3>Notify View layer about model changes</h3>
+            <p>
+                ViewModel objects registered in main.cpp become available globally in qml. 
+                To respond on changes in model, we have to register special slots which 
+                would listen signals associated with changes in model.  
+            </p>
+            <p>
+                <pre>
+                    Connections {
+                        target: authViewModel
+                
+                        onAuthenticationSuccess: {
+                            Common.log("Authentication successful")
+                            signInByCard.errorText = ""
+                            parent.parent.currentScreen = 2  // Switch to the next screen
+                        }
+                
+                        onAuthenticationFailure: {
+                            Common.log("Authentication failed: " + message)
+                            signInByCard.errorText = "Не удалось авторизоваться"
+                            signInByCard.setError()
+                            infoMessage.show("Не удалось авторизоваться")
+                        }
+
+                        // the rest of the code 
+                    }
+                </pre>
+            </p>
+        </section>
+        <section>
+            <h3>Create custom component</h3>
+            <p>
+                Quite soon after the beginning of the development you will face with a necessity
+                to encapsulate code into separate components to cope with code cluttering and 
+                maintain scalability and maintainability of project. It is possible to do by 
+                implementing custom component in a separate file and register it in main.cpp 
+            </p>
+            <p align="center">
+                <img src="/blog/assets/images/2025-03-01/custom-component.png" width="100%"/>
+            </p> 
+        </section>
+        <section>
+            <h3>Share data among screens</h3>
+            <p>
+                Architecture of the app implies one ViewModel per screen. It opens an issue 
+                how to share data among multiple screens.  
+            </p>
+            <p>
+                Aurora OS supports sqlite as a storage layer, but in our case we need to have 
+                something in-memory. This issue had been solved by introduction a separate object 
+                called Cache which is registered in the same as a ViewModel and passed over 
+                constructor to an each ViewModel. In this way it becomes a databus where each 
+                view model might gain access. 
+            </p>
+        </section>
+        <section>
+            <h3>Register images</h3>
+            <p>
+                <pre>
+                    <RCC>
+                        <qresource prefix="/assets">
+                            <!-- Auth form -->
+                            <file>assets/images/background_authorization.png</file>
+                            <file>assets/images/background_auth_form.png</file>
+                            <file>assets/images/background_auth_form_shadow.png</file>
+                            <file>assets/images/background_auth_form_merged.png</file>
+                            
+                        // the rest of the code
+                </pre>
+                Registering images is done over a special file assets.qrc which is later could 
+                be referred in the code this way: 
+                <pre>
+                    Image {
+                        source: "qrc:/assets/assets/images/background_authorization.png"
+                    }
+                </pre> 
+            </p>
+        </section>
+        <section>
+            <h3>NFC</h3>
+            <p>
+                Work with NFC is done over DBus system. You have to implement several its interfaces 
+                in your client to call its API. On receiving signal you can run business logic 
+                associated with it. 
+                <pre>
+                    Image {
+                        source: "qrc:/assets/assets/images/nfc-interface.png"
+                    }
+                </pre> 
+            </p>
+        </section>
+
+        <h4>Related publications:</h4>
+        <ul>
+            <a href="https://gelassen.github.io/blog/2020/06/05-how-we-work.html">How we work</a>
+        </ul>
+
+    </article>
+</body>
